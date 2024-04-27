@@ -8,6 +8,6 @@ namespace PolyBool.Net.Objects
 
         public bool IsInverted2 { get; set; }
 
-        public List<Segment> Combined { get; set; }
+        public List<ISegment> Combined { get; set; }
     }
 }

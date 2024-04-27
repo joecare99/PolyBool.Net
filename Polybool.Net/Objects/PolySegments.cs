@@ -5,6 +5,6 @@ namespace PolyBool.Net.Objects
     public class PolySegments
     {
         public bool IsInverted { get; set; }
-        public List<Segment> Segments { get; set; }
+        public List<ISegment> Segments { get; set; }
     }
 }

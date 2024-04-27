@@ -17,23 +17,20 @@ namespace PolyBool.Net.Logic
 
         private readonly LinkedList eventRoot = new LinkedList();
 
-        private Segment SegmentNew(IPoint start, IPoint end)
+        private ISegment SegmentNew(IPoint start, IPoint end)
         {
-            return new Segment
-            {
-                Start = start,
-                End = end,
-                MyFill = new Fill()
-            };
+            var result = Segment.New(start, end);
+            result.MyFill = new Fill();
+            return result;
         }
 
-        private void EventAddSegment(Segment segment, bool primary)
+        private void EventAddSegment(ISegment segment, bool primary)
         {
             Node evStart = EventAddSegmentStart(segment, primary);
             EventAddSegmentEnd(evStart, segment, primary);
         }
 
-        private void EventAddSegmentEnd(Node evStart, Segment seg, bool primary)
+        private void EventAddSegmentEnd(Node evStart, ISegment seg, bool primary)
         {
 
             Node evEnd = LinkedList.Node(new Node
@@ -49,7 +46,7 @@ namespace PolyBool.Net.Logic
             EventAdd(evEnd, evStart.Pt);
         }
 
-        private Node EventAddSegmentStart(Segment seg, bool primary)
+        private Node EventAddSegmentStart(ISegment seg, bool primary)
         {
             Node evStart = LinkedList.Node(new Node
             {
@@ -131,19 +128,13 @@ namespace PolyBool.Net.Logic
             });
         }
 
-        private Segment SegmentCopy(IPoint start, IPoint end, Segment seg)
+        private ISegment SegmentCopy(IPoint start, IPoint end, ISegment seg)
         {
-            return new Segment()
+            return Segment.NewF(start, end, seg.MyFill != null ? new Fill()
             {
-                Start = start,
-                End = end,
-                MyFill = new Fill()
-                {
-                    Above = seg.MyFill.Above,
-                    Below = seg.MyFill.Below
-
-                }
-            };
+                Above = seg.MyFill.Above,
+                Below = seg.MyFill.Below
+            } : null);
         }
 
         private void EventUpdateEnd(Node ev, IPoint end)
@@ -161,7 +152,7 @@ namespace PolyBool.Net.Logic
 
         private void EventDivide(Node ev, IPoint pt)
         {
-            Segment ns = SegmentCopy(pt, ev.Seg.End, ev.Seg);
+            ISegment ns = SegmentCopy(pt, ev.Seg.End, ev.Seg);
             EventUpdateEnd(ev, pt);
             EventAddSegment(ns, ev.Primary);
         }
@@ -170,8 +161,8 @@ namespace PolyBool.Net.Logic
         {
             // returns the segment equal to ev1, or false if nothing equal
 
-            Segment seg1 = ev1.Seg;
-            Segment seg2 = ev2.Seg;
+            ISegment seg1 = ev1.Seg;
+            ISegment seg2 = ev2.Seg;
             IPoint a1 = seg1.Start;
             IPoint a2 = seg1.End;
             IPoint b1 = seg2.Start;
@@ -306,7 +297,7 @@ namespace PolyBool.Net.Logic
         }
 
         [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
-        private List<Segment> Calculate(bool primaryPolyInverted, bool secondaryPolyInverted)
+        private List<ISegment> Calculate(bool primaryPolyInverted, bool secondaryPolyInverted)
         {
             // if selfIntersection is true then there is no secondary polygon, so that isn"t used
 
@@ -321,7 +312,7 @@ namespace PolyBool.Net.Logic
             //
             // main event loop
             //
-            List<Segment> segments = new List<Segment>();
+            List<ISegment> segments = new List<ISegment>();
             while (!eventRoot.IsEmpty())
             {
                 Node ev = eventRoot.GetHead();
@@ -538,7 +529,7 @@ namespace PolyBool.Net.Logic
                 }
             }
 
-            internal List<Segment> Calculate(bool inverted)
+            internal List<ISegment> Calculate(bool inverted)
             {
                 return Calculate(inverted, false);
             }
@@ -577,14 +568,14 @@ namespace PolyBool.Net.Logic
                 }
             }
 
-            internal List<Segment> Calculate(List<Segment> segments1, bool isInverted1, List<Segment> segments2, bool isInverted2)
+            internal List<ISegment> Calculate(List<ISegment> segments1, bool isInverted1, List<ISegment> segments2, bool isInverted2)
             {
                 // returns segments that can be used for further operations
-                foreach (Segment segment in segments1)
+                foreach (ISegment segment in segments1)
                 {
                     EventAddSegment(segment, true);
                 }
-                foreach (Segment segment in segments2)
+                foreach (ISegment segment in segments2)
                 {
                     EventAddSegment(segment, false);
                 }

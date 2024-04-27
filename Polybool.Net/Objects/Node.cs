@@ -23,7 +23,7 @@ namespace PolyBool.Net.Objects
 
         public IPoint Pt { get; set; }
 
-        public Segment Seg { get; set; }
+        public ISegment Seg { get; set; }
 
         public bool Primary { get; set; }
 

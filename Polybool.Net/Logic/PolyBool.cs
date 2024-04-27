@@ -10,12 +10,12 @@ namespace PolyBool.Net.Logic
 {
     public static class PolyBool
     {
-        internal static List<IRegion> SegmentChainer(List<Segment> segments)
+        internal static List<IRegion> SegmentChainer(List<ISegment> segments)
         {
             List<IRegion> regions = new List<IRegion>();
             List<List<IPoint>> chains = new List<List<IPoint>>();
 
-            foreach (Segment seg in segments)
+            foreach (ISegment seg in segments)
             {
                 IPoint pt1 = seg.Start;
                 IPoint pt2 = seg.End;
