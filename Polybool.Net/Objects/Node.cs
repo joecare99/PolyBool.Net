@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Polybool.Net.Interfaces;
+using PolyBool.Net.Interfaces;
+using System;
 
 namespace Polybool.Net.Objects
 {
@@ -20,20 +22,20 @@ namespace Polybool.Net.Objects
 
         public bool IsStart { get; set; }
 
-        public Point Pt { get; set; }
+        public IPoint Pt { get; set; }
 
-        public Segment Seg { get; set; }
+        public ISegment Seg { get; set; }
 
         public bool Primary { get; set; }
 
-        public bool Equals(Node other)
+        public bool Equals(Node? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return Equals(Previous, other.Previous) && Equals(Next, other.Next) && IsRoot == other.IsRoot;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -45,9 +47,9 @@ namespace Polybool.Net.Objects
         {
             unchecked
             {
-                var hashCode = (Previous != null ? Previous.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Next != null ? Next.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ IsRoot.GetHashCode();
+                var hashCode = Previous != null ? Previous.GetHashCode() : 0;
+                hashCode = hashCode * 397 ^ (Next != null ? Next.GetHashCode() : 0);
+                hashCode = hashCode * 397 ^ IsRoot.GetHashCode();
                 return hashCode;
             }
         }

@@ -1,21 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Polybool.Net.Interfaces;
 
 namespace Polybool.Net.Objects
 {
-    public class Polygon
+    public class Polygon : IPolygon
     {
-        public Polygon()
+        public Polygon(): this(new List<IRegion>())
         {
-            Regions = new List<Region>();
-        }
+        }  
 
-        public Polygon(List<Region> regions, bool isInverted = false)
+        public Polygon(IList<IRegion> regions, bool isInverted = false)
         {
             Regions = regions;
             Inverted = isInverted;
         }
 
-        public List<Region> Regions { get; set; }
+        public IList<IRegion> Regions { get; set; }
         public bool Inverted { get; set; }
+
+        public static Func<IList<IRegion>,bool,IPolygon> New = (regions, isInverted) => new Polygon(regions, isInverted);
     }
 }

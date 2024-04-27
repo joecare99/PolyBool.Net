@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PolyBool.Net.Interfaces;
 
 namespace Polybool.Net.Objects
 {
@@ -8,6 +9,6 @@ namespace Polybool.Net.Objects
 
         public bool IsInverted2 { get; set; }
 
-        public List<Segment> Combined { get; set; }
+        public List<ISegment> Combined { get; set; }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using Polybool.Net.Objects;
+using Polybool.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using PolyBool.Net.Interfaces;
 
 namespace Polybool.Net.Logic
 {
     [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     public static class SegmentSelector
     {
-        public static List<Segment> Union(List<Segment> segments)
+        public static List<ISegment> Union(List<ISegment> segments)
         {
             return Select(segments, new[] {
                 0, 2, 1, 0,
@@ -18,7 +20,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        public static Polygon Union(Polygon first, Polygon second)
+        public static IPolygon Union(IPolygon first, IPolygon second)
         {
             var firstPolygonRegions = PolyBool.Segments(first);
             var secondPolygonRegions = PolyBool.Segments(second);
@@ -31,15 +33,20 @@ namespace Polybool.Net.Logic
                 0, 0, 0, 0
             });
 
-            foreach(var s in union)
+            foreach (var s in union)
             {
                 Console.WriteLine("{0},{1} -> {2},{3}", s.Start.X, s.Start.Y, s.End.X, s.End.Y);
             }
 
-            return new Polygon(PolyBool.SegmentChainer(union), first.Inverted || second.Inverted);
+            return newPolygon(PolyBool.SegmentChainer(union), first.Inverted || second.Inverted);
         }
 
-        public static List<Segment> Intersect(List<Segment> segments)
+        private static IPolygon newPolygon(IList<IRegion> regions, bool v)
+        {
+            return Polygon.New(regions, v);
+        }
+
+        public static List<ISegment> Intersect(List<ISegment> segments)
         {
             return Select(segments, new[] {   0, 0, 0, 0,
                 0, 2, 0, 2,
@@ -48,7 +55,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        public static Polygon Intersect(Polygon first, Polygon second)
+        public static IPolygon Intersect(IPolygon first, IPolygon second)
         {
             var firstPolygonRegions = PolyBool.Segments(first);
             var secondPolygonRegions = PolyBool.Segments(second);
@@ -65,7 +72,7 @@ namespace Polybool.Net.Logic
             {
                 Console.WriteLine("{0},{1} -> {2},{3}", s.Start.X, s.Start.Y, s.End.X, s.End.Y);
             }
-            return new Polygon(PolyBool.SegmentChainer(intersection), first.Inverted && second.Inverted);
+            return newPolygon(PolyBool.SegmentChainer(intersection), first.Inverted && second.Inverted);
         }
 
         public static PolySegments Difference(CombinedPolySegments combined)
@@ -82,7 +89,7 @@ namespace Polybool.Net.Logic
                 IsInverted = !combined.IsInverted1 && combined.IsInverted2
             };
         }
-        public static Polygon Difference(Polygon first, Polygon second)
+        public static IPolygon Difference(IPolygon first, IPolygon second)
         {
             var firstPolygonRegions = PolyBool.Segments(first);
             var secondPolygonRegions = PolyBool.Segments(second);
@@ -96,9 +103,9 @@ namespace Polybool.Net.Logic
                     0, 1, 2, 0
                 });
 
-            return new Polygon(PolyBool.SegmentChainer(difference), first.Inverted && !second.Inverted);
+            return newPolygon(PolyBool.SegmentChainer(difference), first.Inverted && !second.Inverted);
         }
-        public static List<Segment> DifferenceRev(List<Segment> segments)
+        public static List<ISegment> DifferenceRev(List<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 0, 0, 1, 1,
@@ -107,7 +114,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        public static Polygon DifferenceRev(Polygon first, Polygon second)
+        public static IPolygon DifferenceRev(IPolygon first, IPolygon second)
         {
             var firstPolygonRegions = PolyBool.Segments(first);
             var secondPolygonRegions = PolyBool.Segments(second);
@@ -119,9 +126,9 @@ namespace Polybool.Net.Logic
                 0, 0, 0, 0
             });
 
-            return new Polygon(PolyBool.SegmentChainer(difference), !first.Inverted && second.Inverted);
+            return newPolygon(PolyBool.SegmentChainer(difference), !first.Inverted && second.Inverted);
         }
-        public static List<Segment> Xor(List<Segment> segments)
+        public static List<ISegment> Xor(List<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 2, 0, 0, 1,
@@ -129,7 +136,7 @@ namespace Polybool.Net.Logic
                 0, 1, 2, 0
             });
         }
-        public static Polygon Xor(Polygon first, Polygon second)
+        public static IPolygon Xor(IPolygon first, IPolygon second)
         {
             var firstPolygonRegions = PolyBool.Segments(first);
             var secondPolygonRegions = PolyBool.Segments(second);
@@ -141,31 +148,28 @@ namespace Polybool.Net.Logic
                 0, 1, 2, 0
             });
 
-            return new Polygon(PolyBool.SegmentChainer(xor), first.Inverted != second.Inverted);
+            return newPolygon(PolyBool.SegmentChainer(xor), first.Inverted != second.Inverted);
         }
-        private static List<Segment> Select(List<Segment> segments, int[] selection)
+        private static List<ISegment> Select(List<ISegment> segments, int[] selection)
         {
-            List<Segment> result = new List<Segment>();
+            List<ISegment> result = new List<ISegment>();
 
-            foreach (Segment segment in segments)
+            foreach (ISegment segment in segments)
             {
-                int index = (segment.MyFill.Above.Value ? 8 : 0) +
-                            (segment.MyFill.Below.Value ? 4 : 0) +
-                            (segment.OtherFill != null && segment.OtherFill.Above.Value ? 2 : 0) +
-                            (segment.OtherFill != null && segment.OtherFill.Below.Value ? 1 : 0);
+                int index = (segment.MyFill.Above ?? false ? 8 : 0) +
+                            (segment.MyFill.Below ?? true ? 4 : 0) +
+                            (segment.OtherFill != null && (segment.OtherFill.Above ?? false) ? 2 : 0) +
+                            (segment.OtherFill != null && (segment.OtherFill.Below ?? true) ? 1 : 0);
 
                 if (selection[index] != 0)
                 {
-                    result.Add(new Segment
+                    var _seg=segment.Clone();
+                    _seg.MyFill = new Fill
                     {
-                        Start = segment.Start,
-                        End = segment.End,
-                        MyFill = new Fill
-                        {
-                            Above = selection[index] == 1,
-                            Below = selection[index] == 2
-                        }
-                    });
+                        Above = selection[index] == 1,
+                        Below = selection[index] == 2
+                    };
+                    result.Add(_seg);
                 }
             }
 

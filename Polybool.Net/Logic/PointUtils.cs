@@ -1,32 +1,28 @@
 ﻿using System;
+using Polybool.Net.Interfaces;
 using Polybool.Net.Objects;
 
 namespace Polybool.Net.Logic
 {
     public static class PointUtils
     {
-        public static bool PointAboveOrOnLine(Point point, Point left, Point right)
-        {
-            return (right.X - left.X) * (point.Y - left.Y) - (right.Y - left.Y) * (point.X - left.X) >= -Epsilon.Eps;
-        }
-
-        public static bool PointBetween(Point point, Point left, Point right)
+        public static bool PointBetween(this IPoint point, IPoint left, IPoint right)
         {
             // p must be collinear with left->right
             // returns false if p == left, p == right, or left == right
-            decimal dPyLy = point.Y - left.Y;
-            decimal dRxLx = right.X - left.X;
-            decimal dPxLx = point.X - left.X;
-            decimal dRyLy = right.Y - left.Y;
+            var dPyLy = point.Y - left.Y;
+            var dRxLx = right.X - left.X;
+            var dPxLx = point.X - left.X;
+            var dRyLy = right.Y - left.Y;
 
-            decimal dot = dPxLx * dRxLx + dPyLy * dRyLy;
+            var dot = dPxLx * dRxLx + dPyLy * dRyLy;
 
             if (dot < Epsilon.Eps)
             {
                 return false;
             }
 
-            decimal sqlen = dRxLx * dRxLx + dRyLy * dRyLy;
+            var sqlen = dRxLx * dRxLx + dRyLy * dRyLy;
             if (dot - sqlen > -Epsilon.Eps)
             {
                 return false;
@@ -35,84 +31,55 @@ namespace Polybool.Net.Logic
             return true;
         }
 
-        private static bool PointsSameX(Point point1, Point point2)
+        public static bool PointsSame(this IPoint point1, IPoint point2)
         {
-            return Math.Abs(point1.X - point2.X) < Epsilon.Eps;
+            return point1.Same(point2,Epsilon.Eps);
         }
 
-        private static bool PointsSameY(Point point1, Point point2)
+        public static int PointsCompare(this IPoint point1, IPoint point2)
         {
-            return Math.Abs(point1.Y - point2.Y) < Epsilon.Eps;
-        }
-
-        public static bool PointsSame(Point point1, Point point2)
-        {
-            return PointsSameX(point1, point2) && PointsSameY(point1, point2);
-        }
-
-        public static int PointsCompare(Point point1, Point point2)
-        {
-            if (PointsSameX(point1, point2))
+            if (point1.SameX(point2,Epsilon.Eps))
             {
-                return PointsSameY(point1, point2) ? 0 : (point1.Y < point2.Y ? -1 : 1);
+                return point1.SameY(point2, Epsilon.Eps) ? 0 : (point1.Y < point2.Y ? -1 : 1);
             }
             return point1.X < point2.X ? -1 : 1;
         }
 
-        public static bool PointsCollinear(Point pt1, Point pt2, Point pt3)
+        public static bool PointsCollinear(this IPoint pt1, IPoint pt2, IPoint pt3)
         {
-            var dx1 = pt1.X - pt2.X;
-            var dy1 = pt1.Y - pt2.Y;
-            var dx2 = pt2.X - pt3.X;
-            var dy2 = pt2.Y - pt3.Y;
-            return Math.Abs(dx1 * dy2 - dx2 * dy1) < Epsilon.Eps;
+            return Math.Abs((pt1.X - pt2.X) * (pt2.Y - pt3.Y) - (pt2.X - pt3.X) * (pt1.Y - pt2.Y)) < Epsilon.Eps;
         }
 
-        public static IntersectionPoint LinesIntersect(Point a0, Point a1, Point b0, Point b1)
+        public static IntersectionPoint? LinesIntersect(IPoint a0, IPoint a1, IPoint b0, IPoint b1)
         {
-            decimal adx = a1.X - a0.X;
-            decimal ady = a1.Y - a0.Y;
-            decimal bdx = b1.X - b0.X;
-            decimal bdy = b1.Y - b0.Y;
+            var ad = a0.Clone().Subtract(a1);
+            var bd = b0.Clone().Subtract(b1);
 
-            decimal axb = adx * bdy - ady * bdx;
+            var AxB = ad.Multiply(bd.Clone().Normal());
 
-            if (Math.Abs(axb) < Epsilon.Eps)
+            if (Math.Abs(AxB) < Epsilon.Eps)
             {
                 return null;
             }
 
-            decimal dx = a0.X - b0.X;
-            decimal dy = a0.Y - b0.Y;
+            var dr = a0.Clone().Subtract( b0).Normal();
 
-            decimal a = (bdx * dy - bdy * dx) / axb;
-            decimal b = (adx * dy - ady * dx) / axb;
+            var a = bd.Multiply(dr) / AxB;
+            var b = ad.Multiply(dr) / AxB;
 
-            return new IntersectionPoint(CalcAlongUsingValue(a), CalcAlongUsingValue(b), new Point(a0.X + a * adx, a0.Y + a * ady));
+            return new IntersectionPoint(CalcIntersVal(a), CalcIntersVal(b), ad.Clone().Multiply(a).Add(a0) );
         }
 
-        private static int CalcAlongUsingValue(decimal value)
+        private static EIntersVal CalcIntersVal(double value)
         {
-            if (value <= -Epsilon.Eps)
+            return value switch
             {
-                return -2;
-            }
-            else if (value < Epsilon.Eps)
-            {
-                return -1;
-            }
-            else if (value - 1 <= -Epsilon.Eps)
-            {
-                return 0;
-            }
-            else if (value - 1 < Epsilon.Eps)
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
+                double d when d <= -Epsilon.Eps => EIntersVal.Before,
+                double d when d < Epsilon.Eps => EIntersVal.OnStart,
+                double d when d-1d <= -Epsilon.Eps => EIntersVal.Middle,
+                double d when d-1d < Epsilon.Eps => EIntersVal.OnEnd,
+                _ => EIntersVal.After
+            };
         }
     }
 }

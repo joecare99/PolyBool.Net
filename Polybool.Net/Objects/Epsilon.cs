@@ -2,6 +2,6 @@
 {
     public static class Epsilon
     {
-        public static decimal Eps { get; set; } = 0.00001m;
+        public static double Eps { get; set; } = 0.00001d;
     }
 }
