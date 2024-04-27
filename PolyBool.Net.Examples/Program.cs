@@ -10,7 +10,6 @@ internal class Program
 {
     private static void Main()
     {
-
         var p1 = Polygon.New([
             new Region {
                 Points = [
