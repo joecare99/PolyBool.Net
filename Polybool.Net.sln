@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polybool.Net", "Polybool.Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net.Examples.New", "PolyBool.Net.Examples\PolyBool.Net.Examples.New.csproj", "{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution-Elements", "Solution-Elements", "{3A8FB0FD-88F6-44BC-B49F-B32E2C052B4B}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		Solution.props = Solution.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
