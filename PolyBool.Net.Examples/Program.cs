@@ -12,21 +12,19 @@ internal class Program
     {
 
         var p1 = Polygon.New([
-            new Region {
-                Points = [
+            Region.New([
                     new Point(0, 0),
                     new Point(16, 0),
                     new Point(8, 8)
                 ]
-            }], false);
+            )], false);
         var p2 = Polygon.New([
-            new Region {
-                Points = [
+            Region.New([
                     new Point(16, 6),
                     new Point(8, 14),
                     new Point(0, 6),
                 ]
-            }], false);
+            )], false);
 
         var unified = SegmentSelector.Union(p1, p2);
 

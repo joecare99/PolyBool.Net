@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Polybool.Net.Objects;
+using PolyBool.Net.Interfaces;
 
 namespace Polybool.Net.Logic
 {
@@ -509,7 +510,7 @@ namespace Polybool.Net.Logic
 
         public class RegionIntersecter : Intersecter
         {
-            public void AddRegion(Region region)
+            public void AddRegion(IRegion region)
             {
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]
@@ -548,7 +549,7 @@ namespace Polybool.Net.Logic
         }
         public class SegmentIntersecter : Intersecter
         {
-            public void AddRegion(Region region)
+            public void AddRegion(IRegion region)
             {
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]

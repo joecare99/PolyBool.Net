@@ -10,9 +10,9 @@ namespace Polybool.Net.Logic
 {
     public static class PolyBool
     {
-        internal static List<Region> SegmentChainer(List<Segment> segments)
+        internal static List<IRegion> SegmentChainer(List<Segment> segments)
         {
-            List<Region> regions = new List<Region>();
+            List<IRegion> regions = new List<IRegion>();
             List<List<Point>> chains = new List<List<Point>>();
 
             foreach (Segment seg in segments)
@@ -153,7 +153,7 @@ namespace Polybool.Net.Logic
                         }
 
                         // we have a closed chain!
-                        regions.Add(new Region() { Points = chain.ToList() });
+                        regions.Add(Region.New( chain ));
                         continue;
                     }
 
@@ -270,7 +270,7 @@ namespace Polybool.Net.Logic
         public static PolySegments Segments(IPolygon poly)
         {
             Intersecter.RegionIntersecter i = new Intersecter.RegionIntersecter();
-            foreach (Region region in poly.Regions)
+            foreach (IRegion region in poly.Regions)
             {
                 i.AddRegion(region);
             }
