@@ -169,7 +169,7 @@ namespace PolyBool.Net.Logic
             IPoint b2 = seg2.End;
 
 
-            IntersectionPoint i = PointUtils.LinesIntersect(a1, a2, b1, b2);
+            IntersectionPoint? i = PointUtils.LinesIntersect(a1, a2, b1, b2);
 
             if (i == null)
             {
@@ -381,7 +381,7 @@ namespace PolyBool.Net.Logic
                     if (selfIntersection)
                     {
                         bool toggle; // are we a toggling edge?
-                        if (ev.Seg.MyFill.Below == null) // if we are a new segment...
+                        if (ev.Seg.MyFill?.Below == null) // if we are a new segment...
                         {
                             toggle = true; // then we toggle
                         }
@@ -391,26 +391,26 @@ namespace PolyBool.Net.Logic
                         }
 
                         // next, calculate whether we are filled below us
-                        if (below == null)
+                        if (below == null && ev.Seg.MyFill!= null)
                         {
                             // if nothing is below us...
                             // we are filled below us if the polygon is inverted
                             ev.Seg.MyFill.Below = primaryPolyInverted;
                         }
-                        else
+                        else if (below != null && ev.Seg.MyFill != null)
                         {
                             // otherwise, we know the answer -- it"s the same if whatever is below
                             // us is filled above it
-                            ev.Seg.MyFill.Below = below.Seg.MyFill.Above;
+                            ev.Seg.MyFill.Below = below.Seg.MyFill?.Above;
                         }
 
                         // since now we know if we"re filled below us, we can calculate whether
                         // we"re filled above us by applying toggle to whatever is below us
-                        if (toggle)
+                        if (toggle && ev.Seg.MyFill != null)
                         {
                             ev.Seg.MyFill.Above = !ev.Seg.MyFill.Below;
                         }
-                        else
+                        else if (!toggle && ev.Seg.MyFill != null)
                         {
                             ev.Seg.MyFill.Above = ev.Seg.MyFill.Below;
                         }
@@ -424,7 +424,7 @@ namespace PolyBool.Net.Logic
                         {
                             // if we don"t have other information, then we need to figure out if we"re
                             // inside the other polygon
-                            bool inside;
+                            bool? inside;
                             if (below == null)
                             {
                                 // if nothing is below us, then we"re inside if the other polygon is
@@ -438,11 +438,11 @@ namespace PolyBool.Net.Logic
                                 // so copy the below segment"s other polygon"s above
                                 if (ev.Primary == below.Primary)
                                 {
-                                    inside = below.Seg.OtherFill.Above.Value;
+                                    inside = below.Seg.OtherFill?.Above;
                                 }
                                 else
                                 {
-                                    inside = below.Seg.MyFill.Above.Value;
+                                    inside = below.Seg.MyFill?.Above;
                                 }
                             }
                             ev.Seg.OtherFill = new Fill()
@@ -483,7 +483,7 @@ namespace PolyBool.Net.Logic
                     if (!ev.Primary)
                     {
                         // make sure `seg.myFill` actually points to the primary polygon though
-                        Fill s = ev.Seg.MyFill;
+                        Fill? s = ev.Seg.MyFill;
                         ev.Seg.MyFill = ev.Seg.OtherFill;
                         ev.Seg.OtherFill = s;
                     }

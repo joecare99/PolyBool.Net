@@ -69,7 +69,7 @@ public static class PointUtils
         return Math.Abs(dx1 * dy2 - dx2 * dy1) < Epsilon.Eps;
     }
 
-    public static IntersectionPoint LinesIntersect(IPoint a0, IPoint a1, IPoint b0, IPoint b1)
+    public static IntersectionPoint? LinesIntersect(IPoint a0, IPoint a1, IPoint b0, IPoint b1)
     {
         decimal adx = a1.X - a0.X;
         decimal ady = a1.Y - a0.Y;

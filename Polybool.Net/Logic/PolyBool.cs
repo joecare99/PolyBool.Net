@@ -41,7 +41,7 @@ namespace PolyBool.Net.Logic
                     MatchesPt1 = false
 
                 };
-                Matcher nextMatch = firstMatch;
+                Matcher? nextMatch = firstMatch;
 
                 Func<int, bool, bool, bool> setMatch = (index, matchesHead, matchesPt1) =>
                  {
