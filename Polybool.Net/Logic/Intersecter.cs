@@ -157,7 +157,7 @@ namespace PolyBool.Net.Logic
             EventAddSegment(ns, ev.Primary);
         }
 
-        private Node CheckIntersection(Node ev1, Node ev2)
+        private Node? CheckIntersection(Node ev1, Node ev2)
         {
             // returns the segment equal to ev1, or false if nothing equal
 
@@ -279,11 +279,11 @@ namespace PolyBool.Net.Logic
             return null;
         }
 
-        private Node CheckBothIntersections(Node above, Node ev, Node below)
+        private Node? CheckBothIntersections(Node? above, Node ev, Node? below)
         {
             if (above != null)
             {
-                Node eve = CheckIntersection(ev, above);
+                Node? eve = CheckIntersection(ev, above);
                 if (eve != null)
                 {
                     return eve;
@@ -323,11 +323,11 @@ namespace PolyBool.Net.Logic
 
 
                     Transition surrounding = StatusFindSurrounding(statusRoot, ev);
-                    Node above = surrounding.Before != null ? surrounding.Before.Ev : null;
-                    Node below = surrounding.After != null ? surrounding.After.Ev : null;
+                    Node? above = surrounding.Before != null ? surrounding.Before.Ev : null;
+                    Node? below = surrounding.After != null ? surrounding.After.Ev : null;
 
 
-                    Node eve = CheckBothIntersections(above, ev, below);
+                    Node? eve = CheckBothIntersections(above, ev, below);
                     if (eve != null)
                     {
                         // ev and eve are equal
@@ -338,7 +338,7 @@ namespace PolyBool.Net.Logic
                         if (selfIntersection)
                         {
                             bool toggle; // are we a toggling edge?
-                            if (ev.Seg.MyFill.Below == null)
+                            if (ev.Seg.MyFill?.Below == null)
                             {
                                 toggle = true;
                             }
@@ -350,7 +350,7 @@ namespace PolyBool.Net.Logic
                             // merge two segments that belong to the same polygon
                             // think of this as sandwiching two segments together, where `eve.seg` is
                             // the bottom -- this will cause the above fill flag to toggle
-                            if (toggle)
+                            if (toggle && eve.Seg.MyFill!=null)
                             {
                                 eve.Seg.MyFill.Above = !eve.Seg.MyFill.Above;
                             }
@@ -568,7 +568,7 @@ namespace PolyBool.Net.Logic
                 }
             }
 
-            internal List<ISegment> Calculate(List<ISegment> segments1, bool isInverted1, List<ISegment> segments2, bool isInverted2)
+            internal IList<ISegment> Calculate(IList<ISegment> segments1, bool isInverted1, IList<ISegment> segments2, bool isInverted2)
             {
                 // returns segments that can be used for further operations
                 foreach (ISegment segment in segments1)

@@ -9,7 +9,7 @@ public class Point : Point<decimal>, IPoint
     {
     }
 
-    public static Func<decimal, decimal, IPoint> New { get; set; } = (x, y) => new Point(x, y);
+    public static new Func<decimal, decimal, IPoint> New { get; set; } = (x, y) => new Point(x, y);
 }
 
 public class Point<T>(T x, T y) : IPoint<T> where T : struct

@@ -10,10 +10,10 @@ namespace PolyBool.Net.Logic
 {
     public static class PolyBool
     {
-        internal static List<IRegion> SegmentChainer(List<ISegment> segments)
+        internal static IList<IRegion> SegmentChainer(IList<ISegment> segments)
         {
-            List<IRegion> regions = new List<IRegion>();
-            List<List<IPoint>> chains = new List<List<IPoint>>();
+            IList<IRegion> regions = new List<IRegion>();
+            IList<IList<IPoint>> chains = new List<IList<IPoint>>();
 
             foreach (ISegment seg in segments)
             {
@@ -61,7 +61,7 @@ namespace PolyBool.Net.Logic
 
                 for (int i = 0; i < chains.Count; i++)
                 {
-                    List<IPoint> chain = chains[i];
+                    IList<IPoint> chain = chains[i];
                     IPoint head = chain[0];
                     IPoint tail = chain[chain.Count - 1];
                     if (PointUtils.PointsSame(head, pt1))
@@ -112,7 +112,7 @@ namespace PolyBool.Net.Logic
                     IPoint pt = firstMatch.MatchesPt1 ? pt2 : pt1; // if we matched pt1, then we add pt2, etc
                     bool addToHead = firstMatch.MatchesHead; // if we matched at head, then add to the head
 
-                    List<IPoint> chain = chains[index];
+                    IList<IPoint> chain = chains[index];
                     IPoint grow = addToHead ? chain[0] : chain[chain.Count - 1];
                     IPoint grow2 = addToHead ? chain[1] : chain[chain.Count - 2];
                     IPoint oppo = addToHead ? chain[chain.Count - 1] : chain[0];
@@ -179,8 +179,8 @@ namespace PolyBool.Net.Logic
                 Action<int, int> appendChain = (index1, index2) =>
                 {
                     // index1 gets index2 appended to it, and index2 is removed
-                    List<IPoint> chain1 = chains[index1];
-                    List<IPoint> chain2 = chains[index2];
+                    IList<IPoint> chain1 = chains[index1];
+                    IList<IPoint> chain2 = chains[index2];
                     IPoint tail = chain1[chain1.Count - 1];
                     IPoint tail2 = chain1[chain1.Count - 2];
                     IPoint head = chain2[0];
@@ -285,9 +285,8 @@ namespace PolyBool.Net.Logic
         public static CombinedPolySegments Combine(PolySegments segments1, PolySegments segments2)
         {
             Intersecter.SegmentIntersecter i = new Intersecter.SegmentIntersecter();
-            return new CombinedPolySegments
+            return new CombinedPolySegments(i.Calculate(segments1.Segments, segments1.IsInverted, segments2.Segments, segments2.IsInverted))
             {
-                Combined = i.Calculate(segments1.Segments, segments1.IsInverted, segments2.Segments, segments2.IsInverted),
                 IsInverted1 = segments1.IsInverted,
                 IsInverted2 = segments2.IsInverted
 

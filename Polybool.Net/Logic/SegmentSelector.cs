@@ -9,7 +9,7 @@ namespace PolyBool.Net.Logic
     [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     public static class SegmentSelector
     {
-        public static List<ISegment> Union(List<ISegment> segments)
+        public static IList<ISegment> Union(IList<ISegment> segments)
         {
             return Select(segments, new[] {
                 0, 2, 1, 0,
@@ -40,7 +40,7 @@ namespace PolyBool.Net.Logic
             return Polygon.New(PolyBool.SegmentChainer(union), first.Inverted || second.Inverted);
         }
 
-        public static List<ISegment> Intersect(List<ISegment> segments)
+        public static IList<ISegment> Intersect(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 0, 0, 0,
                 0, 2, 0, 2,
@@ -99,7 +99,7 @@ namespace PolyBool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(difference), first.Inverted && !second.Inverted);
         }
-        public static List<ISegment> DifferenceRev(List<ISegment> segments)
+        public static IList<ISegment> DifferenceRev(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 0, 0, 1, 1,
@@ -122,7 +122,7 @@ namespace PolyBool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(difference), !first.Inverted && second.Inverted);
         }
-        public static List<ISegment> Xor(List<ISegment> segments)
+        public static IList<ISegment> Xor(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 2, 0, 0, 1,
@@ -144,9 +144,9 @@ namespace PolyBool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(xor), first.Inverted != second.Inverted);
         }
-        private static List<ISegment> Select(List<ISegment> segments, int[] selection)
+        private static IList<ISegment> Select(IList<ISegment> segments, int[] selection)
         {
-            List<ISegment> result = new List<ISegment>();
+            IList<ISegment> result = new List<ISegment>();
 
             foreach (ISegment segment in segments)
             {
