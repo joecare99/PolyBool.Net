@@ -1,16 +1,17 @@
-﻿namespace Polybool.Net.Objects
-{
-    public class IntersectionPoint
-    {
-        public Point Pt { get; set; }
-        public int AlongA { get; set; }
-        public int AlongB { get; set; }
+﻿using PolyBool.Net.Interfaces;
 
-        public IntersectionPoint(int alongA, int alongB, Point pt)
-        {
-            AlongA = alongA;
-            AlongB = alongB;
-            Pt = pt;
-        }
+namespace PolyBool.Net.Objects;
+
+public class IntersectionPoint
+{
+    public IPoint Pt { get; set; }
+    public int AlongA { get; set; }
+    public int AlongB { get; set; }
+
+    public IntersectionPoint(int alongA, int alongB, IPoint pt)
+    {
+        AlongA = alongA;
+        AlongB = alongB;
+        Pt = pt;
     }
 }

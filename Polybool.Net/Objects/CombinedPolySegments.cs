@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class CombinedPolySegments
     {

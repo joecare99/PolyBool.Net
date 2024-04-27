@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Objects;
+namespace PolyBool.Net.Objects;
 public class Polygon(IList<IRegion> regions, bool isInverted = false) : IPolygon
 {
 

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyBool.Net.Examples", "PolyBool.Net.Examples\PolyBool.Net.Examples.csproj", "{673E2268-9BB0-4E9C-9948-395B80CFB5C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polybool.Net", "Polybool.Net\Polybool.Net.csproj", "{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net", "Polybool.Net\PolyBool.Net.csproj", "{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net.Examples.New", "PolyBool.Net.Examples\PolyBool.Net.Examples.New.csproj", "{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}"
 EndProject

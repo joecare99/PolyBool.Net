@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Polybool.Net.Objects;
+using PolyBool.Net.Objects;
 using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     public static class PolyBool
     {
         internal static List<IRegion> SegmentChainer(List<Segment> segments)
         {
             List<IRegion> regions = new List<IRegion>();
-            List<List<Point>> chains = new List<List<Point>>();
+            List<List<IPoint>> chains = new List<List<IPoint>>();
 
             foreach (Segment seg in segments)
             {
-                Point pt1 = seg.Start;
-                Point pt2 = seg.End;
+                IPoint pt1 = seg.Start;
+                IPoint pt2 = seg.End;
                 if (PointUtils.PointsSame(pt1, pt2))
                 {
                     Debug.WriteLine("PolyBool: Warning: Zero-length segment detected; your epsilon is " +
@@ -61,9 +61,9 @@ namespace Polybool.Net.Logic
 
                 for (int i = 0; i < chains.Count; i++)
                 {
-                    List<Point> chain = chains[i];
-                    Point head = chain[0];
-                    Point tail = chain[chain.Count - 1];
+                    List<IPoint> chain = chains[i];
+                    IPoint head = chain[0];
+                    IPoint tail = chain[chain.Count - 1];
                     if (PointUtils.PointsSame(head, pt1))
                     {
                         if (setMatch(i, true, true))
@@ -97,7 +97,7 @@ namespace Polybool.Net.Logic
                 if (Equals(nextMatch, firstMatch))
                 {
                     // we didn't match anything, so create a new chain
-                    chains.Add(new List<Point> { pt1, pt2 });
+                    chains.Add(new List<IPoint> { pt1, pt2 });
                     continue;
                 }
 
@@ -109,14 +109,14 @@ namespace Polybool.Net.Logic
                     // chain into a loop
 
                     int index = firstMatch.Index;
-                    Point pt = firstMatch.MatchesPt1 ? pt2 : pt1; // if we matched pt1, then we add pt2, etc
+                    IPoint pt = firstMatch.MatchesPt1 ? pt2 : pt1; // if we matched pt1, then we add pt2, etc
                     bool addToHead = firstMatch.MatchesHead; // if we matched at head, then add to the head
 
-                    List<Point> chain = chains[index];
-                    Point grow = addToHead ? chain[0] : chain[chain.Count - 1];
-                    Point grow2 = addToHead ? chain[1] : chain[chain.Count - 2];
-                    Point oppo = addToHead ? chain[chain.Count - 1] : chain[0];
-                    Point oppo2 = addToHead ? chain[chain.Count - 2] : chain[1];
+                    List<IPoint> chain = chains[index];
+                    IPoint grow = addToHead ? chain[0] : chain[chain.Count - 1];
+                    IPoint grow2 = addToHead ? chain[1] : chain[chain.Count - 2];
+                    IPoint oppo = addToHead ? chain[chain.Count - 1] : chain[0];
+                    IPoint oppo2 = addToHead ? chain[chain.Count - 2] : chain[1];
 
                     if (PointUtils.PointsCollinear(grow2, grow, pt))
                     {
@@ -179,12 +179,12 @@ namespace Polybool.Net.Logic
                 Action<int, int> appendChain = (index1, index2) =>
                 {
                     // index1 gets index2 appended to it, and index2 is removed
-                    List<Point> chain1 = chains[index1];
-                    List<Point> chain2 = chains[index2];
-                    Point tail = chain1[chain1.Count - 1];
-                    Point tail2 = chain1[chain1.Count - 2];
-                    Point head = chain2[0];
-                    Point head2 = chain2[1];
+                    List<IPoint> chain1 = chains[index1];
+                    List<IPoint> chain2 = chains[index2];
+                    IPoint tail = chain1[chain1.Count - 1];
+                    IPoint tail2 = chain1[chain1.Count - 2];
+                    IPoint head = chain2[0];
+                    IPoint head2 = chain2[1];
 
                     if (PointUtils.PointsCollinear(tail2, tail, head))
                     {

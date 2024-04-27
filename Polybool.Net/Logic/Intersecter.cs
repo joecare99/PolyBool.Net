@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Polybool.Net.Objects;
+using PolyBool.Net.Objects;
 using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     public class Intersecter
     {
@@ -17,7 +17,7 @@ namespace Polybool.Net.Logic
 
         private readonly LinkedList eventRoot = new LinkedList();
 
-        private Segment SegmentNew(Point start, Point end)
+        private Segment SegmentNew(IPoint start, IPoint end)
         {
             return new Segment
             {
@@ -62,7 +62,7 @@ namespace Polybool.Net.Logic
             return evStart;
         }
 
-        private void EventAdd(Node ev, Point otherPt)
+        private void EventAdd(Node ev, IPoint otherPt)
         {
             eventRoot.InsertBefore(ev, here =>
             {
@@ -75,7 +75,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        private int EventCompare(bool p1IsStart, Point p11, Point p12, bool p2IsStart, Point p21, Point p22)
+        private int EventCompare(bool p1IsStart, IPoint p11, IPoint p12, bool p2IsStart, IPoint p21, IPoint p22)
         {
             // compare the selected points first
             int comp = PointUtils.PointsCompare(p11, p21);
@@ -106,10 +106,10 @@ namespace Polybool.Net.Logic
 
         private int StatusCompare(Node ev1, Node ev2)
         {
-            Point a1 = ev1.Seg.Start;
-            Point a2 = ev1.Seg.End;
-            Point b1 = ev2.Seg.Start;
-            Point b2 = ev2.Seg.End;
+            IPoint a1 = ev1.Seg.Start;
+            IPoint a2 = ev1.Seg.End;
+            IPoint b1 = ev2.Seg.Start;
+            IPoint b2 = ev2.Seg.End;
 
             if (PointUtils.PointsCollinear(a1, b1, b2))
             {
@@ -131,7 +131,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        private Segment SegmentCopy(Point start, Point end, Segment seg)
+        private Segment SegmentCopy(IPoint start, IPoint end, Segment seg)
         {
             return new Segment()
             {
@@ -146,7 +146,7 @@ namespace Polybool.Net.Logic
             };
         }
 
-        private void EventUpdateEnd(Node ev, Point end)
+        private void EventUpdateEnd(Node ev, IPoint end)
         {
             // slides an end backwards
             //   (start)------------(end)    to:
@@ -159,7 +159,7 @@ namespace Polybool.Net.Logic
             EventAdd(ev.Other, ev.Pt);
         }
 
-        private void EventDivide(Node ev, Point pt)
+        private void EventDivide(Node ev, IPoint pt)
         {
             Segment ns = SegmentCopy(pt, ev.Seg.End, ev.Seg);
             EventUpdateEnd(ev, pt);
@@ -172,10 +172,10 @@ namespace Polybool.Net.Logic
 
             Segment seg1 = ev1.Seg;
             Segment seg2 = ev2.Seg;
-            Point a1 = seg1.Start;
-            Point a2 = seg1.End;
-            Point b1 = seg2.Start;
-            Point b2 = seg2.End;
+            IPoint a1 = seg1.Start;
+            IPoint a2 = seg1.End;
+            IPoint b1 = seg2.Start;
+            IPoint b2 = seg2.End;
 
 
             IntersectionPoint i = PointUtils.LinesIntersect(a1, a2, b1, b2);
@@ -515,8 +515,8 @@ namespace Polybool.Net.Logic
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]
                 // you can add multiple regions before running calculate
-                Point pt1;
-                Point pt2 = region.Points[region.Points.Count - 1];
+                IPoint pt1;
+                IPoint pt2 = region.Points[region.Points.Count - 1];
                 for (int i = 0; i < region.Points.Count; i++)
                 {
                     pt1 = pt2;
@@ -554,8 +554,8 @@ namespace Polybool.Net.Logic
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]
                 // you can add multiple regions before running calculate
-                Point pt1;
-                Point pt2 = region.Points[region.Points.Count - 1];
+                IPoint pt1;
+                IPoint pt2 = region.Points[region.Points.Count - 1];
                 for (int i = 0; i < region.Points.Count; i++)
                 {
                     pt1 = pt2;

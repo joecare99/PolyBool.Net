@@ -1,10 +1,10 @@
-﻿using Polybool.Net.Objects;
+﻿using PolyBool.Net.Objects;
 using PolyBool.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     public static class SegmentSelector

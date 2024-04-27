@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     internal static class Utils
     {

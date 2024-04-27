@@ -1,10 +1,12 @@
-﻿namespace Polybool.Net.Objects
+﻿
+using PolyBool.Net.Interfaces;
+
+namespace PolyBool.Net.Objects;
+
+public class Segment
 {
-    public class Segment
-    {
-        public Point End { get; set; }
-        public Point Start { get; set; }
-        public Fill MyFill { get; set; }
-        public Fill OtherFill { get; set; }
-    }
+    public IPoint End { get; set; }
+    public IPoint Start { get; set; }
+    public Fill MyFill { get; set; }
+    public Fill OtherFill { get; set; }
 }

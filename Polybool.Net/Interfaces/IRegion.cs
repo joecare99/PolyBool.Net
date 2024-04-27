@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Polybool.Net.Objects;
 
-namespace PolyBool.Net.Interfaces
+namespace PolyBool.Net.Interfaces;
+
+public interface IRegion
 {
-    public interface IRegion
-    {
-        IList<Point> Points { get; set; }
-    }
+    IList<IPoint> Points { get; set; }
 }

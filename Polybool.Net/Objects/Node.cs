@@ -1,6 +1,7 @@
 ﻿using System;
+using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Node : IEquatable<Node>
     {
@@ -20,7 +21,7 @@ namespace Polybool.Net.Objects
 
         public bool IsStart { get; set; }
 
-        public Point Pt { get; set; }
+        public IPoint Pt { get; set; }
 
         public Segment Seg { get; set; }
 
