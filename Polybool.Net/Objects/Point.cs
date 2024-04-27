@@ -10,5 +10,10 @@
 
         public decimal X { get; set; }
         public decimal Y { get; set; }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
+        }
     }
 }
