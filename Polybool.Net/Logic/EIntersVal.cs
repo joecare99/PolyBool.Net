@@ -1,4 +1,4 @@
-﻿namespace Polybool.Net.Logic;
+﻿namespace PolyBool.Net.Logic;
 
 public enum EIntersVal
 {

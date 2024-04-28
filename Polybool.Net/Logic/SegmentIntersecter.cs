@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Polybool.Net.Interfaces;
+using PolyBool.Net.Interfaces;
 using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
 
     public class SegmentIntersecter : Intersecter

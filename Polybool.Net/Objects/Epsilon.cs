@@ -1,4 +1,4 @@
-﻿namespace Polybool.Net.Objects
+﻿namespace PolyBool.Net.Objects
 {
     public static class Epsilon
     {

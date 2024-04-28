@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Polybool.Net.Logic;
-using Polybool.Net.Objects;
-using Polybool.Net.Interfaces;
+using PolyBool.Net.Logic;
+using PolyBool.Net.Objects;
+using PolyBool.Net.Interfaces;
 
 namespace PolyBool.Net.Examples
 {

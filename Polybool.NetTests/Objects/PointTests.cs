@@ -1,6 +1,6 @@
-﻿using Polybool.Net.Interfaces;
+﻿using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Objects.Tests
+namespace PolyBool.Net.Objects.Tests
 {
     [TestClass()]
     public class PointTests

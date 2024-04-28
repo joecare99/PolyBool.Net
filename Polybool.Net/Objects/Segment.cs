@@ -1,8 +1,8 @@
-﻿using Polybool.Net.Interfaces;
+﻿using PolyBool.Net.Interfaces;
 using PolyBool.Net.Interfaces;
 using System;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Segment(IPoint start, IPoint end, Fill? fill) : ISegment
     {

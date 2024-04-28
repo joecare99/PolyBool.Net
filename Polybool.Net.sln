@@ -8,11 +8,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polybool.Net", "Polybool.Net\Polybool.Net.csproj", "{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{CF658A3B-18F5-483D-8C6B-4A43DE144E85}"
-	ProjectSection(SolutionItems) = preProject
-		Solution.props = Solution.props
-	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polybool.NetTests", "Polybool.NetTests\Polybool.NetTests.csproj", "{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyBool.NetTests", "Polybool.NetTests\PolyBool.NetTests.csproj", "{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net.Examples.new", "PolyBool.Net.Examples\PolyBool.Net.Examples.new.csproj", "{FF3A265F-939C-4030-889A-FFB79095E1AD}"
 EndProject

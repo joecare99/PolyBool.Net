@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Polybool.Net.Interfaces;
+using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Polygon : IPolygon
     {

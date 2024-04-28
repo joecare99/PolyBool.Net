@@ -1,8 +1,8 @@
 ﻿using System;
-using Polybool.Net.Interfaces;
-using Polybool.Net.Objects;
+using PolyBool.Net.Interfaces;
+using PolyBool.Net.Objects;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     public static class PointUtils
     {

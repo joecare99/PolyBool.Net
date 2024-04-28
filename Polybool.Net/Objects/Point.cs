@@ -1,9 +1,9 @@
-﻿using Polybool.Net.Interfaces;
+﻿using PolyBool.Net.Interfaces;
 using System;
 using System.Drawing;
 using System.Reflection;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Point(double x, double y) : IPoint, IPoint<double>
     {

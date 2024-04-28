@@ -1,7 +1,7 @@
-﻿using Polybool.Net.Interfaces;
-using Polybool.Net.Logic;
+﻿using PolyBool.Net.Interfaces;
+using PolyBool.Net.Logic;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class IntersectionPoint
     {

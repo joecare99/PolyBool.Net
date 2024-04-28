@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Polybool.Net.Interfaces;
-using Polybool.Net.Objects;
+using PolyBool.Net.Interfaces;
+using PolyBool.Net.Objects;
 using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     public static class PolyBool
     {

@@ -1,8 +1,8 @@
-﻿using Polybool.Net.Interfaces;
+﻿using PolyBool.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Region(IList<IPoint> pnts) : IRegion
     {

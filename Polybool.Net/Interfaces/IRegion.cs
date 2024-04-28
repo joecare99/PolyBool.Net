@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Polybool.Net.Interfaces;
+namespace PolyBool.Net.Interfaces;
 
 public interface IRegion
 {
