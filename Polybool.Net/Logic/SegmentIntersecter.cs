@@ -34,7 +34,7 @@ namespace PolyBool.Net.Logic
             }
         }
 
-        internal List<ISegment> Calculate(List<ISegment> segments1, bool isInverted1, List<ISegment> segments2, bool isInverted2)
+        internal List<ISegment> Calculate(IList<ISegment> segments1, bool isInverted1, IList<ISegment> segments2, bool isInverted2)
         {
             // returns segments that can be used for further operations
             foreach (ISegment segment in segments1)

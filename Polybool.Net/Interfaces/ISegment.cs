@@ -6,7 +6,7 @@ namespace PolyBool.Net.Interfaces
     {
         IPoint Start { get; set; }
         IPoint End { get; set; }
-        Fill MyFill { get; set; }
+        Fill? MyFill { get; set; }
         Fill? OtherFill { get; set; }
 
         /// <summary>
