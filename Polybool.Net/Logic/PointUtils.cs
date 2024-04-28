@@ -109,7 +109,7 @@ public static class PointUtils
     public static IPoint<T> Add<T>(this IPoint<T> pt1, IPoint pt2) where T : struct, IConvertible
     {
         if (pt2 is IPoint<T> p2)
-            return pt1.Add(p2); 
+            pt1.Add(p2); 
         return pt1;
     }
       public static IPoint<T> Subract<T>(this IPoint<T> pt1, IPoint<T> pt2) where T : struct, IConvertible
@@ -122,7 +122,7 @@ public static class PointUtils
     public static IPoint<T> Subtract<T>(this IPoint<T> pt1, IPoint pt2) where T : struct, IConvertible
     {
         if (pt2 is IPoint<T> p2)
-            return pt1.Add(p2); 
+            pt1.Subract(p2); 
         return pt1;
     }
 

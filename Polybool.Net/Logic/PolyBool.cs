@@ -269,7 +269,7 @@ namespace PolyBool.Net.Logic
 
         public static PolySegments Segments(IPolygon poly)
         {
-            Intersecter.RegionIntersecter i = new Intersecter.RegionIntersecter();
+            RegionIntersecter i = new RegionIntersecter();
             foreach (IRegion region in poly.Regions)
             {
                 i.AddRegion(region);
@@ -284,7 +284,7 @@ namespace PolyBool.Net.Logic
 
         public static CombinedPolySegments Combine(PolySegments segments1, PolySegments segments2)
         {
-            Intersecter.SegmentIntersecter i = new Intersecter.SegmentIntersecter();
+            SegmentIntersecter i = new SegmentIntersecter();
             return new CombinedPolySegments(i.Calculate(segments1.Segments, segments1.IsInverted, segments2.Segments, segments2.IsInverted))
             {
                 IsInverted1 = segments1.IsInverted,
