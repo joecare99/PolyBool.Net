@@ -37,6 +37,19 @@ namespace PolyBool.Net.Objects.Tests
         }
 
         [DataTestMethod()]
+        [DataRow(0, 0, 1, 1, -1, -1)]
+        [DataRow(1, 1, 0, 0, 1, 1)]
+        [DataRow(1, 3, 2, 5, -1, -2)]
+        public void SubtractTest(double X, double Y, double X1, double Y1, double ExpX, double ExpY)
+        {
+            IPoint<T> p = newIPoint(X, Y);
+            Point p1 = newPoint(X1, Y1);
+            Assert.IsInstanceOfType(p.Subtract(p1), typeof(IPoint));
+            Assert.AreEqual(ExpX, p.X.ToDouble(null));
+            Assert.AreEqual(ExpY, p.Y.ToDouble(null));
+        }
+
+        [DataTestMethod()]
         [DataRow(0, 0, 1, 1, false)]
         [DataRow(1, 1, 0, 0, false)]
         [DataRow(1, 1, 1, 1, true)]
@@ -98,18 +111,6 @@ namespace PolyBool.Net.Objects.Tests
             Assert.AreEqual(ExpY,erg.Y , 1e-5);
         }
 
-        [DataTestMethod()]
-        [DataRow(0, 0, 1, 1, -1, -1)]
-        [DataRow(1, 1, 0, 0, 1, 1)]
-        [DataRow(1, 3, 2, 5, -1, -2)]
-        public void SubtractTest(double X, double Y, double X1, double Y1, double ExpX, double ExpY)
-        {
-            IPoint<double> p = new Point(X, Y);
-            Point p1 = new Point(X1, Y1);
-            Assert.IsInstanceOfType(p.Subtract(p1), typeof(IPoint));
-            Assert.AreEqual(ExpX, p.X);
-            Assert.AreEqual(ExpY, p.Y);
-        }
         /*/
         [DataTestMethod()]
         [DataRow(0,0,"(0, 0)")]

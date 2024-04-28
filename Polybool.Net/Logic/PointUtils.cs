@@ -112,6 +112,19 @@ public static class PointUtils
             return pt1.Add(p2); 
         return pt1;
     }
+      public static IPoint<T> Subract<T>(this IPoint<T> pt1, IPoint<T> pt2) where T : struct, IConvertible
+    {
+        if (pt1 is IPoint<decimal> p1 && pt2 is IPoint<decimal> p2)
+            (p1.X,p1.Y)=(p1.X - p2.X,p1.Y - p2.Y); 
+        return pt1;
+    } 
+
+    public static IPoint<T> Subtract<T>(this IPoint<T> pt1, IPoint pt2) where T : struct, IConvertible
+    {
+        if (pt2 is IPoint<T> p2)
+            return pt1.Add(p2); 
+        return pt1;
+    }
 
     public static IntersectionPoint? LinesIntersect(IPoint a0, IPoint a1, IPoint b0, IPoint b1)
     {
