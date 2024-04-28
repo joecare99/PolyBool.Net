@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Polybool.Net.Objects;
+using PolyBool.Net.Objects;
+using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     public class Intersecter
     {
@@ -16,23 +17,20 @@ namespace Polybool.Net.Logic
 
         private readonly LinkedList eventRoot = new LinkedList();
 
-        private Segment SegmentNew(Point start, Point end)
+        private ISegment SegmentNew(IPoint start, IPoint end)
         {
-            return new Segment
-            {
-                Start = start,
-                End = end,
-                MyFill = new Fill()
-            };
+            var result = Segment.New(start, end);
+            result.MyFill = new Fill();
+            return result;
         }
 
-        private void EventAddSegment(Segment segment, bool primary)
+        private void EventAddSegment(ISegment segment, bool primary)
         {
             Node evStart = EventAddSegmentStart(segment, primary);
             EventAddSegmentEnd(evStart, segment, primary);
         }
 
-        private void EventAddSegmentEnd(Node evStart, Segment seg, bool primary)
+        private void EventAddSegmentEnd(Node evStart, ISegment seg, bool primary)
         {
 
             Node evEnd = LinkedList.Node(new Node
@@ -48,7 +46,7 @@ namespace Polybool.Net.Logic
             EventAdd(evEnd, evStart.Pt);
         }
 
-        private Node EventAddSegmentStart(Segment seg, bool primary)
+        private Node EventAddSegmentStart(ISegment seg, bool primary)
         {
             Node evStart = LinkedList.Node(new Node
             {
@@ -61,7 +59,7 @@ namespace Polybool.Net.Logic
             return evStart;
         }
 
-        private void EventAdd(Node ev, Point otherPt)
+        private void EventAdd(Node ev, IPoint otherPt)
         {
             eventRoot.InsertBefore(ev, here =>
             {
@@ -74,7 +72,7 @@ namespace Polybool.Net.Logic
             });
         }
 
-        private int EventCompare(bool p1IsStart, Point p11, Point p12, bool p2IsStart, Point p21, Point p22)
+        private int EventCompare(bool p1IsStart, IPoint p11, IPoint p12, bool p2IsStart, IPoint p21, IPoint p22)
         {
             // compare the selected points first
             int comp = PointUtils.PointsCompare(p11, p21);
@@ -105,10 +103,10 @@ namespace Polybool.Net.Logic
 
         private int StatusCompare(Node ev1, Node ev2)
         {
-            Point a1 = ev1.Seg.Start;
-            Point a2 = ev1.Seg.End;
-            Point b1 = ev2.Seg.Start;
-            Point b2 = ev2.Seg.End;
+            IPoint a1 = ev1.Seg.Start;
+            IPoint a2 = ev1.Seg.End;
+            IPoint b1 = ev2.Seg.Start;
+            IPoint b2 = ev2.Seg.End;
 
             if (PointUtils.PointsCollinear(a1, b1, b2))
             {
@@ -130,22 +128,16 @@ namespace Polybool.Net.Logic
             });
         }
 
-        private Segment SegmentCopy(Point start, Point end, Segment seg)
+        private ISegment SegmentCopy(IPoint start, IPoint end, ISegment seg)
         {
-            return new Segment()
+            return Segment.NewF(start, end, seg.MyFill != null ? new Fill()
             {
-                Start = start,
-                End = end,
-                MyFill = new Fill()
-                {
-                    Above = seg.MyFill.Above,
-                    Below = seg.MyFill.Below
-
-                }
-            };
+                Above = seg.MyFill.Above,
+                Below = seg.MyFill.Below
+            } : null);
         }
 
-        private void EventUpdateEnd(Node ev, Point end)
+        private void EventUpdateEnd(Node ev, IPoint end)
         {
             // slides an end backwards
             //   (start)------------(end)    to:
@@ -158,26 +150,26 @@ namespace Polybool.Net.Logic
             EventAdd(ev.Other, ev.Pt);
         }
 
-        private void EventDivide(Node ev, Point pt)
+        private void EventDivide(Node ev, IPoint pt)
         {
-            Segment ns = SegmentCopy(pt, ev.Seg.End, ev.Seg);
+            ISegment ns = SegmentCopy(pt, ev.Seg.End, ev.Seg);
             EventUpdateEnd(ev, pt);
             EventAddSegment(ns, ev.Primary);
         }
 
-        private Node CheckIntersection(Node ev1, Node ev2)
+        private Node? CheckIntersection(Node ev1, Node ev2)
         {
             // returns the segment equal to ev1, or false if nothing equal
 
-            Segment seg1 = ev1.Seg;
-            Segment seg2 = ev2.Seg;
-            Point a1 = seg1.Start;
-            Point a2 = seg1.End;
-            Point b1 = seg2.Start;
-            Point b2 = seg2.End;
+            ISegment seg1 = ev1.Seg;
+            ISegment seg2 = ev2.Seg;
+            IPoint a1 = seg1.Start;
+            IPoint a2 = seg1.End;
+            IPoint b1 = seg2.Start;
+            IPoint b2 = seg2.End;
 
 
-            IntersectionPoint i = PointUtils.LinesIntersect(a1, a2, b1, b2);
+            IntersectionPoint? i = PointUtils.LinesIntersect(a1, a2, b1, b2);
 
             if (i == null)
             {
@@ -287,11 +279,11 @@ namespace Polybool.Net.Logic
             return null;
         }
 
-        private Node CheckBothIntersections(Node above, Node ev, Node below)
+        private Node? CheckBothIntersections(Node? above, Node ev, Node? below)
         {
             if (above != null)
             {
-                Node eve = CheckIntersection(ev, above);
+                Node? eve = CheckIntersection(ev, above);
                 if (eve != null)
                 {
                     return eve;
@@ -305,7 +297,7 @@ namespace Polybool.Net.Logic
         }
 
         [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
-        private List<Segment> Calculate(bool primaryPolyInverted, bool secondaryPolyInverted)
+        private List<ISegment> Calculate(bool primaryPolyInverted, bool secondaryPolyInverted)
         {
             // if selfIntersection is true then there is no secondary polygon, so that isn"t used
 
@@ -320,7 +312,7 @@ namespace Polybool.Net.Logic
             //
             // main event loop
             //
-            List<Segment> segments = new List<Segment>();
+            List<ISegment> segments = new List<ISegment>();
             while (!eventRoot.IsEmpty())
             {
                 Node ev = eventRoot.GetHead();
@@ -331,11 +323,11 @@ namespace Polybool.Net.Logic
 
 
                     Transition surrounding = StatusFindSurrounding(statusRoot, ev);
-                    Node above = surrounding.Before != null ? surrounding.Before.Ev : null;
-                    Node below = surrounding.After != null ? surrounding.After.Ev : null;
+                    Node? above = surrounding.Before != null ? surrounding.Before.Ev : null;
+                    Node? below = surrounding.After != null ? surrounding.After.Ev : null;
 
 
-                    Node eve = CheckBothIntersections(above, ev, below);
+                    Node? eve = CheckBothIntersections(above, ev, below);
                     if (eve != null)
                     {
                         // ev and eve are equal
@@ -346,7 +338,7 @@ namespace Polybool.Net.Logic
                         if (selfIntersection)
                         {
                             bool toggle; // are we a toggling edge?
-                            if (ev.Seg.MyFill.Below == null)
+                            if (ev.Seg.MyFill?.Below == null)
                             {
                                 toggle = true;
                             }
@@ -358,7 +350,7 @@ namespace Polybool.Net.Logic
                             // merge two segments that belong to the same polygon
                             // think of this as sandwiching two segments together, where `eve.seg` is
                             // the bottom -- this will cause the above fill flag to toggle
-                            if (toggle)
+                            if (toggle && eve.Seg.MyFill!=null)
                             {
                                 eve.Seg.MyFill.Above = !eve.Seg.MyFill.Above;
                             }
@@ -389,7 +381,7 @@ namespace Polybool.Net.Logic
                     if (selfIntersection)
                     {
                         bool toggle; // are we a toggling edge?
-                        if (ev.Seg.MyFill.Below == null) // if we are a new segment...
+                        if (ev.Seg.MyFill?.Below == null) // if we are a new segment...
                         {
                             toggle = true; // then we toggle
                         }
@@ -399,26 +391,26 @@ namespace Polybool.Net.Logic
                         }
 
                         // next, calculate whether we are filled below us
-                        if (below == null)
+                        if (below == null && ev.Seg.MyFill!= null)
                         {
                             // if nothing is below us...
                             // we are filled below us if the polygon is inverted
                             ev.Seg.MyFill.Below = primaryPolyInverted;
                         }
-                        else
+                        else if (below != null && ev.Seg.MyFill != null)
                         {
                             // otherwise, we know the answer -- it"s the same if whatever is below
                             // us is filled above it
-                            ev.Seg.MyFill.Below = below.Seg.MyFill.Above;
+                            ev.Seg.MyFill.Below = below.Seg.MyFill?.Above;
                         }
 
                         // since now we know if we"re filled below us, we can calculate whether
                         // we"re filled above us by applying toggle to whatever is below us
-                        if (toggle)
+                        if (toggle && ev.Seg.MyFill != null)
                         {
                             ev.Seg.MyFill.Above = !ev.Seg.MyFill.Below;
                         }
-                        else
+                        else if (!toggle && ev.Seg.MyFill != null)
                         {
                             ev.Seg.MyFill.Above = ev.Seg.MyFill.Below;
                         }
@@ -432,7 +424,7 @@ namespace Polybool.Net.Logic
                         {
                             // if we don"t have other information, then we need to figure out if we"re
                             // inside the other polygon
-                            bool inside;
+                            bool? inside;
                             if (below == null)
                             {
                                 // if nothing is below us, then we"re inside if the other polygon is
@@ -446,11 +438,11 @@ namespace Polybool.Net.Logic
                                 // so copy the below segment"s other polygon"s above
                                 if (ev.Primary == below.Primary)
                                 {
-                                    inside = below.Seg.OtherFill.Above.Value;
+                                    inside = below.Seg.OtherFill?.Above;
                                 }
                                 else
                                 {
-                                    inside = below.Seg.MyFill.Above.Value;
+                                    inside = below.Seg.MyFill?.Above;
                                 }
                             }
                             ev.Seg.OtherFill = new Fill()
@@ -491,7 +483,7 @@ namespace Polybool.Net.Logic
                     if (!ev.Primary)
                     {
                         // make sure `seg.myFill` actually points to the primary polygon though
-                        Fill s = ev.Seg.MyFill;
+                        Fill? s = ev.Seg.MyFill;
                         ev.Seg.MyFill = ev.Seg.OtherFill;
                         ev.Seg.OtherFill = s;
                     }
@@ -509,13 +501,13 @@ namespace Polybool.Net.Logic
 
         public class RegionIntersecter : Intersecter
         {
-            public void AddRegion(Region region)
+            public void AddRegion(IRegion region)
             {
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]
                 // you can add multiple regions before running calculate
-                Point pt1;
-                Point pt2 = region.Points[region.Points.Count - 1];
+                IPoint pt1;
+                IPoint pt2 = region.Points[region.Points.Count - 1];
                 for (int i = 0; i < region.Points.Count; i++)
                 {
                     pt1 = pt2;
@@ -537,7 +529,7 @@ namespace Polybool.Net.Logic
                 }
             }
 
-            internal List<Segment> Calculate(bool inverted)
+            internal List<ISegment> Calculate(bool inverted)
             {
                 return Calculate(inverted, false);
             }
@@ -548,13 +540,13 @@ namespace Polybool.Net.Logic
         }
         public class SegmentIntersecter : Intersecter
         {
-            public void AddRegion(Region region)
+            public void AddRegion(IRegion region)
             {
                 // regions are a list of points:
                 //  [ [0, 0], [100, 0], [50, 100] ]
                 // you can add multiple regions before running calculate
-                Point pt1;
-                Point pt2 = region.Points[region.Points.Count - 1];
+                IPoint pt1;
+                IPoint pt2 = region.Points[region.Points.Count - 1];
                 for (int i = 0; i < region.Points.Count; i++)
                 {
                     pt1 = pt2;
@@ -576,14 +568,14 @@ namespace Polybool.Net.Logic
                 }
             }
 
-            internal List<Segment> Calculate(List<Segment> segments1, bool isInverted1, List<Segment> segments2, bool isInverted2)
+            internal IList<ISegment> Calculate(IList<ISegment> segments1, bool isInverted1, IList<ISegment> segments2, bool isInverted2)
             {
                 // returns segments that can be used for further operations
-                foreach (Segment segment in segments1)
+                foreach (ISegment segment in segments1)
                 {
                     EventAddSegment(segment, true);
                 }
-                foreach (Segment segment in segments2)
+                foreach (ISegment segment in segments2)
                 {
                     EventAddSegment(segment, false);
                 }

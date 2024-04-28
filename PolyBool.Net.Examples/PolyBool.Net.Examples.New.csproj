@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Polybool.Net\Polybool.Net.csproj" />
+		<ProjectReference Include="..\Polybool.Net\PolyBool.Net.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

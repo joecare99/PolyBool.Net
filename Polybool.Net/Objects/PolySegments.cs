@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class PolySegments
     {
         public bool IsInverted { get; set; }
-        public List<Segment> Segments { get; set; }
+        public IList<ISegment> Segments { get; set; }
     }
 }

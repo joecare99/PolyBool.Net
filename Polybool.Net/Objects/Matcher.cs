@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects
 {
     public class Matcher
     {

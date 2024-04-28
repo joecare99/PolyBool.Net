@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using PolyBool.Net.Interfaces;
 
-namespace Polybool.Net.Objects
+namespace PolyBool.Net.Objects;
+
+public class Region(IList<IPoint> points) : IRegion
 {
-    public class Region
-    {
-        public List<Point> Points { get; set; }
-    }
+    public IList<IPoint> Points { get; set; }= points;
+
+     public static Func<IList<IPoint>, IRegion> New { get; set; }= points => new Region(points);
 }

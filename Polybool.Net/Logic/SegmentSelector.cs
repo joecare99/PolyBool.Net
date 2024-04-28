@@ -1,15 +1,15 @@
-﻿using Polybool.Net.Objects;
+﻿using PolyBool.Net.Objects;
 using PolyBool.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Polybool.Net.Logic
+namespace PolyBool.Net.Logic
 {
     [SuppressMessage("ReSharper", "PossibleInvalidOperationException")]
     public static class SegmentSelector
     {
-        public static List<Segment> Union(List<Segment> segments)
+        public static IList<ISegment> Union(IList<ISegment> segments)
         {
             return Select(segments, new[] {
                 0, 2, 1, 0,
@@ -40,7 +40,7 @@ namespace Polybool.Net.Logic
             return Polygon.New(PolyBool.SegmentChainer(union), first.Inverted || second.Inverted);
         }
 
-        public static List<Segment> Intersect(List<Segment> segments)
+        public static IList<ISegment> Intersect(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 0, 0, 0,
                 0, 2, 0, 2,
@@ -99,7 +99,7 @@ namespace Polybool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(difference), first.Inverted && !second.Inverted);
         }
-        public static List<Segment> DifferenceRev(List<Segment> segments)
+        public static IList<ISegment> DifferenceRev(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 0, 0, 1, 1,
@@ -122,7 +122,7 @@ namespace Polybool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(difference), !first.Inverted && second.Inverted);
         }
-        public static List<Segment> Xor(List<Segment> segments)
+        public static IList<ISegment> Xor(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
                 2, 0, 0, 1,
@@ -144,29 +144,24 @@ namespace Polybool.Net.Logic
 
             return Polygon.New(PolyBool.SegmentChainer(xor), first.Inverted != second.Inverted);
         }
-        private static List<Segment> Select(List<Segment> segments, int[] selection)
+        private static IList<ISegment> Select(IList<ISegment> segments, int[] selection)
         {
-            List<Segment> result = new List<Segment>();
+            IList<ISegment> result = new List<ISegment>();
 
-            foreach (Segment segment in segments)
+            foreach (ISegment segment in segments)
             {
-                int index = (segment.MyFill.Above.Value ? 8 : 0) +
-                            (segment.MyFill.Below.Value ? 4 : 0) +
-                            (segment.OtherFill != null && segment.OtherFill.Above.Value ? 2 : 0) +
-                            (segment.OtherFill != null && segment.OtherFill.Below.Value ? 1 : 0);
+                int index = (segment.MyFill?.Above ?? false ? 8 : 0) +
+                            (segment.MyFill?.Below ?? false ? 4 : 0) +
+                            (segment.OtherFill != null && (segment.OtherFill.Above ?? false) ? 2 : 0) +
+                            (segment.OtherFill != null && (segment.OtherFill.Below ?? false) ? 1 : 0);
 
                 if (selection[index] != 0)
                 {
-                    result.Add(new Segment
+                    result.Add(Segment.NewF(segment.Start, segment.End, new Fill
                     {
-                        Start = segment.Start,
-                        End = segment.End,
-                        MyFill = new Fill
-                        {
-                            Above = selection[index] == 1,
-                            Below = selection[index] == 2
-                        }
-                    });
+                        Above = selection[index] == 1,
+                        Below = selection[index] == 2
+                    }));
                 }
             }
 
