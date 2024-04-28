@@ -27,7 +27,7 @@ namespace PolyBool.Net.Objects
 
         public bool Primary { get; set; }
 
-        public bool Equals(Node other)
+        public bool Equals(Node? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
