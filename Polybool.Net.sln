@@ -5,15 +5,13 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyBool.Net.Examples", "PolyBool.Net.Examples\PolyBool.Net.Examples.csproj", "{673E2268-9BB0-4E9C-9948-395B80CFB5C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polybool.Net", "Polybool.Net\Polybool.Net.csproj", "{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net", "Polybool.Net\PolyBool.Net.csproj", "{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{CF658A3B-18F5-483D-8C6B-4A43DE144E85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyBool.NetTests", "Polybool.NetTests\PolyBool.NetTests.csproj", "{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.NetTests", "PolyBool.NetTests\PolyBool.NetTests.csproj", "{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyBool.Net.Examples.new", "PolyBool.Net.Examples\PolyBool.Net.Examples.new.csproj", "{FF3A265F-939C-4030-889A-FFB79095E1AD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolyBool.NetTests", "PolyBool.NetTests\PolyBool.NetTests.csproj", "{595ADC17-F785-4A9C-91D2-5D84FB2BD1BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +27,14 @@ Global
 		{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2D1356B-0EC0-4DC7-BDBD-C5DF6F05C872}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3BDF3B61-6AA2-4924-AC79-8DFD4940491A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{595ADC17-F785-4A9C-91D2-5D84FB2BD1BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{595ADC17-F785-4A9C-91D2-5D84FB2BD1BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{595ADC17-F785-4A9C-91D2-5D84FB2BD1BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{595ADC17-F785-4A9C-91D2-5D84FB2BD1BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D95568-E556-40B3-A7AD-F2A92FA1E3E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF3A265F-939C-4030-889A-FFB79095E1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF3A265F-939C-4030-889A-FFB79095E1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF3A265F-939C-4030-889A-FFB79095E1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF3A265F-939C-4030-889A-FFB79095E1AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
