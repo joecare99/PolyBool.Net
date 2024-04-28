@@ -97,10 +97,10 @@ namespace PolyBool.Net.Objects.Tests
         }
 
         [DataTestMethod()]
-        [DataRow(0,0,"(0,0)")]
-        [DataRow(1,1,"(1,1)")]
-        [DataRow(1,3,"(1,3)")]
-        [DataRow(3,2,"(3,2)")]
+        [DataRow(0,0,"(0, 0)")]
+        [DataRow(1,1,"(1, 1)")]
+        [DataRow(1,3,"(1, 3)")]
+        [DataRow(3,2,"(3, 2)")]
         public void ToStringTest(double X,double Y,string sExp)
         {
             Point p = new Point(X, Y);

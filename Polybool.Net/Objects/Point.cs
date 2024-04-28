@@ -55,7 +55,7 @@ namespace PolyBool.Net.Objects
 
         public override string ToString()
         {
-            return $"({X},{Y})";
+            return $"({X}, {Y})";
         }
 
         public override int GetHashCode()
