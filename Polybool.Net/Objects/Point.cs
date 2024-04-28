@@ -1,7 +1,5 @@
 ﻿using PolyBool.Net.Interfaces;
 using System;
-using System.Drawing;
-using System.Reflection;
 
 namespace PolyBool.Net.Objects
 {

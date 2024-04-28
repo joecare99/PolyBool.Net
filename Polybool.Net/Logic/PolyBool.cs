@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using PolyBool.Net.Interfaces;
 using PolyBool.Net.Objects;
-using PolyBool.Net.Interfaces;
 
 namespace PolyBool.Net.Logic
 {

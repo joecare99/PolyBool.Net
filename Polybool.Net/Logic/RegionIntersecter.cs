@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using PolyBool.Net.Interfaces;
-using PolyBool.Net.Interfaces;
 
 namespace PolyBool.Net.Logic
 {

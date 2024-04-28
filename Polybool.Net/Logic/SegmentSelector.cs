@@ -3,7 +3,6 @@ using PolyBool.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using PolyBool.Net.Interfaces;
 
 namespace PolyBool.Net.Logic
 {

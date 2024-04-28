@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace PolyBool.Net.Interfaces
+﻿namespace PolyBool.Net.Interfaces
 {
     public interface IPoint: IPoint<double>
     {

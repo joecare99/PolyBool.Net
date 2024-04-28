@@ -1,5 +1,4 @@
-﻿using PolyBool.Net.Interfaces;
-using PolyBool.Net.Objects;
+﻿using PolyBool.Net.Objects;
 
 namespace PolyBool.Net.Interfaces
 {
