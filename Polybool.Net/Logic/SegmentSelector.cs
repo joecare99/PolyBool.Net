@@ -133,7 +133,7 @@ namespace PolyBool.Net.Logic
 
                 if (selection[index] != 0)
                 {
-                    result.Add(Segment.NewF(segment.Start, segment.End, new Fill
+                    result.Add(Segment.New(segment.Start, segment.End, new Fill
                     {
                         Above = selection[index] == 1,
                         Below = selection[index] == 2
