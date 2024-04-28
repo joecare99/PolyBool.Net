@@ -36,28 +36,58 @@ public static class PointUtils
         return true;
     }
 
-    private static bool PointsSameX(IPoint point1, IPoint point2)
+    private static bool SameX(this IPoint point1, IPoint point2, decimal eps)
     {
-        return Math.Abs(point1.X - point2.X) < Epsilon.Eps;
+        return Math.Abs(point1.X - point2.X) < eps;
     }
 
-    private static bool PointsSameY(IPoint point1, IPoint point2)
+    private static bool SameY(this IPoint point1, IPoint point2, decimal eps)
     {
-        return Math.Abs(point1.Y - point2.Y) < Epsilon.Eps;
+        return Math.Abs(point1.Y - point2.Y) < eps;
     }
 
-    public static bool PointsSame(IPoint point1, IPoint point2)
+    public static bool SameX<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
     {
-        return PointsSameX(point1, point2) && PointsSameY(point1, point2);
+        if (point1 is IPoint p1 && eps is decimal e )
+            return p1.SameX(point2,e);
+        return false;
     }
 
-    public static int PointsCompare(IPoint point1, IPoint point2)
+    public static bool SameY<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
     {
-        if (PointsSameX(point1, point2))
+        if (point1 is IPoint p1 && eps is decimal e)
+            return p1.SameY(point2, e);
+        return false;
+    }
+
+    public static bool Same<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
+    {
+        if (point1 is IPoint p1 && eps is decimal e)
+            return p1.Same(point2, e);
+        return false;
+    }
+
+    public static bool Same(this IPoint point1, IPoint point2, decimal eps)
+    {
+        return SameX(point1, point2, eps) && SameY(point1, point2, eps);
+    }
+    public static bool PointsSame(this IPoint point1, IPoint point2)
+    {
+        return point1.Same(point2, Epsilon.Eps) ;
+    }
+
+    public static int Compare(this IPoint point1, IPoint point2, decimal eps)
+    {
+        if (SameX(point1, point2, eps))
         {
-            return PointsSameY(point1, point2) ? 0 : (point1.Y < point2.Y ? -1 : 1);
+            return SameY(point1, point2, eps) ? 0 : (point1.Y < point2.Y ? -1 : 1);
         }
         return point1.X < point2.X ? -1 : 1;
+    }
+
+    public static int PointsCompare(this IPoint point1, IPoint point2)
+    {
+        return point1.Compare(point2,Epsilon.Eps);
     }
 
     public static bool PointsCollinear(IPoint pt1, IPoint pt2, IPoint pt3)
@@ -67,6 +97,33 @@ public static class PointUtils
         var dx2 = pt2.X - pt3.X;
         var dy2 = pt2.Y - pt3.Y;
         return Math.Abs(dx1 * dy2 - dx2 * dy1) < Epsilon.Eps;
+    }
+
+    public static IPoint<T> Add<T>(this IPoint<T> pt1, IPoint<T> pt2) where T : struct, IConvertible
+    {
+        if (pt1 is IPoint<decimal> p1 && pt2 is IPoint<decimal> p2)
+            (p1.X,p1.Y)=(p1.X + p2.X,p1.Y + p2.Y); 
+        return pt1;
+    } 
+
+    public static IPoint<T> Add<T>(this IPoint<T> pt1, IPoint pt2) where T : struct, IConvertible
+    {
+        if (pt2 is IPoint<T> p2)
+            pt1.Add(p2); 
+        return pt1;
+    }
+      public static IPoint<T> Subract<T>(this IPoint<T> pt1, IPoint<T> pt2) where T : struct, IConvertible
+    {
+        if (pt1 is IPoint<decimal> p1 && pt2 is IPoint<decimal> p2)
+            (p1.X,p1.Y)=(p1.X - p2.X,p1.Y - p2.Y); 
+        return pt1;
+    } 
+
+    public static IPoint<T> Subtract<T>(this IPoint<T> pt1, IPoint pt2) where T : struct, IConvertible
+    {
+        if (pt2 is IPoint<T> p2)
+            pt1.Subract(p2); 
+        return pt1;
     }
 
     public static IntersectionPoint? LinesIntersect(IPoint a0, IPoint a1, IPoint b0, IPoint b1)

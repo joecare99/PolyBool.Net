@@ -22,5 +22,14 @@ public class Point<T>(T x, T y) : IPoint<T> where T : struct
         return $"({X}, {Y})";
     }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is IPoint<T> p)
+        {
+            return X.Equals(p.X) && Y.Equals(p.Y);
+        }
+        return base.Equals(obj);
+    }
+
     public static Func<T, T, IPoint<T>> New { get; set; } = (x, y) => new Point<T>(x, y);
 }
