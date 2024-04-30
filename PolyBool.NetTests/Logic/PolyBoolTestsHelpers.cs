@@ -1,7 +1,6 @@
 ﻿using PolyBool.Net.Interfaces;
 using PolyBool.Net.Objects;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace PolyBool.Net.Logic.Tests
 {
@@ -12,7 +11,7 @@ namespace PolyBool.Net.Logic.Tests
             var result = new List<IPoint>();
             for (int i = 0; i < pvals.Count - 1; i += 2)
             {
-                result.Add(Point.New((decimal)pvals[i], (decimal)pvals[i + 1]));
+                result.Add(Point.New(pvals[i], pvals[i + 1]));
             }
             return result;
         }

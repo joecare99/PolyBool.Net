@@ -1,12 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PolyBool.Net.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using PolyBool.Net.Interfaces;
-using PolyBool.Net.Objects;
 
 namespace PolyBool.Net.Logic.Tests
 {
@@ -48,8 +41,8 @@ namespace PolyBool.Net.Logic.Tests
                 Assert.AreEqual((ex[i] as IList<double>).Count, region.Points.Count * 2);
                 for (int j = 0; j < (ex[i] as IList<double>).Count - 1; j += 2)
                 {
-                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
-                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].X");
                 }
             }
         }
@@ -75,8 +68,8 @@ namespace PolyBool.Net.Logic.Tests
                 Assert.AreEqual((ex[i] as IList<double>).Count, region.Points.Count * 2);
                 for (int j = 0; j < (ex[i] as IList<double>).Count - 1; j += 2)
                 {
-                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
-                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].Y");
+                    Assert.AreEqual((ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].Y");
                 }
             }
         }

@@ -1,11 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PolyBool.Net.Logic;
+﻿using PolyBool.Net.Interfaces;
 using PolyBool.Net.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PolyBool.Net.Logic.Tests
 {
@@ -27,10 +21,10 @@ namespace PolyBool.Net.Logic.Tests
             {
                 var s = segments.Segments[i/5];
                 Assert.IsInstanceOfType(s, typeof(ISegment));
-                Assert.AreEqual((decimal)aEx[i], s.Start.X,$"S[{i/5}].S.X");
-                Assert.AreEqual((decimal)aEx[i + 1], s.Start.Y, $"S[{i / 5}].S.Y");
-                Assert.AreEqual((decimal)aEx[i + 2], s.End.X, $"S[{i / 5}].E.X");
-                Assert.AreEqual((decimal)aEx[i + 3], s.End.Y, $"S[{i / 5}].EY");
+                Assert.AreEqual(aEx[i], s.Start.X,$"S[{i/5}].S.X");
+                Assert.AreEqual(aEx[i + 1], s.Start.Y, $"S[{i / 5}].S.Y");
+                Assert.AreEqual(aEx[i + 2], s.End.X, $"S[{i / 5}].E.X");
+                Assert.AreEqual(aEx[i + 3], s.End.Y, $"S[{i / 5}].EY");
                 Assert.AreEqual((int)aEx[i + 4], s.FIndex(), $"S[{i / 5}].IX");
             }
         }
