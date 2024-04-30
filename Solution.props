@@ -8,9 +8,9 @@
 		<Nullable>enable</Nullable>
 		<DefineConstants>NULLABLE</DefineConstants>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Company>JC-Soft</Company>
-		<Authors>Joe Care</Authors>
-		<Copyright>Copyright © JC-Soft 2024</Copyright>
+		<Company>IDormenco-Soft</Company>
+		<author>Ion Dormenco</author>
+		<Copyright>Copyright © Ion Dormenco 2024</Copyright>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<Optimize>False</Optimize>
