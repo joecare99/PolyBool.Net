@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Polybool.Net.Objects;
+using PolyBool.Net.Interfaces;
 
 namespace Polybool.Net.Logic
 {
@@ -266,7 +267,7 @@ namespace Polybool.Net.Logic
             return regions;
         }
 
-        public static PolySegments Segments(Polygon poly)
+        public static PolySegments Segments(IPolygon poly)
         {
             Intersecter.RegionIntersecter i = new Intersecter.RegionIntersecter();
             foreach (Region region in poly.Regions)
@@ -293,13 +294,10 @@ namespace Polybool.Net.Logic
             };
         }
 
-        public static Polygon Polygon(PolySegments polySegments)
+        public static IPolygon Polygon(PolySegments polySegments)
         {
-            return new Polygon
-            {
-                Regions = SegmentChainer(polySegments.Segments),
-                Inverted = polySegments.IsInverted
-            };
+            return Objects.Polygon.New(SegmentChainer(polySegments.Segments),
+                polySegments.IsInverted);
         }
 
 
