@@ -275,9 +275,8 @@ namespace PolyBool.Net.Logic
                 i.AddRegion(region);
             }
 
-            return new PolySegments
+            return new PolySegments(i.Calculate(poly.Inverted))
             {
-                Segments = i.Calculate(poly.Inverted),
                 IsInverted = poly.Inverted
             };
         }
@@ -287,7 +286,7 @@ namespace PolyBool.Net.Logic
             SegmentIntersecter i = new SegmentIntersecter();
             return new CombinedPolySegments(i.Calculate(segments1.Segments, segments1.IsInverted, segments2.Segments, segments2.IsInverted))
             {
-                IsInverted1 = segments1.IsInverted,
+                IsInverted = segments1.IsInverted,
                 IsInverted2 = segments2.IsInverted
 
             };
