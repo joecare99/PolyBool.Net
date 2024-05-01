@@ -1,4 +1,5 @@
 ﻿using System;
+using PolyBool.Net.Helper;
 using PolyBool.Net.Interfaces;
 using PolyBool.Net.Objects;
 
@@ -15,9 +16,9 @@ public static class PointUtils
     {
         // p must be collinear with left->right
         // returns false if p == left, p == right, or left == right
+        decimal dPxLx = point.X - left.X;
         decimal dPyLy = point.Y - left.Y;
         decimal dRxLx = right.X - left.X;
-        decimal dPxLx = point.X - left.X;
         decimal dRyLy = right.Y - left.Y;
 
         decimal dot = dPxLx * dRxLx + dPyLy * dRyLy;
@@ -46,25 +47,19 @@ public static class PointUtils
         return Math.Abs(point1.Y - point2.Y) < eps;
     }
 
-    public static bool SameX<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
+    public static bool SameX<T>(this IPoint<T> point1, IPoint<T> point2, T eps) where T : struct, IComparable
     {
-        if (point1 is IPoint p1 && eps is decimal e )
-            return p1.SameX(point2,e);
-        return false;
+       return point1.X.Sub(point2.X).Abs().CompareTo(eps)<0;
     }
 
-    public static bool SameY<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
+    public static bool SameY<T>(this IPoint<T> point1, IPoint<T> point2, T eps) where T : struct, IComparable
     {
-        if (point1 is IPoint p1 && eps is decimal e)
-            return p1.SameY(point2, e);
-        return false;
+        return point1.Y.Sub(point2.Y).Abs().CompareTo(eps) < 0;
     }
 
-    public static bool Same<T>(this IPoint<T> point1, IPoint point2, T eps) where T : struct, IConvertible
+    public static bool Same<T>(this IPoint<T> point1, IPoint<T> point2, T eps) where T : struct, IComparable
     {
-        if (point1 is IPoint p1 && eps is decimal e)
-            return p1.Same(point2, e);
-        return false;
+        return point1.SameX(point2, eps) && point1.SameY(point2, eps);
     }
 
     public static bool Same(this IPoint point1, IPoint point2, decimal eps)

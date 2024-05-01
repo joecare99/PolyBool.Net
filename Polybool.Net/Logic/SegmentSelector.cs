@@ -25,7 +25,7 @@ namespace PolyBool.Net.Logic
             var secondPolygonRegions = PolyBool.Segments(second);
             var combinedSegments = PolyBool.Combine(firstPolygonRegions, secondPolygonRegions);
 
-            var union = Union(combinedSegments.Combined);
+            var union = Union(combinedSegments.Segments);
 
             foreach(var s in union)
             {
@@ -50,7 +50,7 @@ namespace PolyBool.Net.Logic
             var secondPolygonRegions = PolyBool.Segments(second);
             var combinedSegments = PolyBool.Combine(firstPolygonRegions, secondPolygonRegions);
 
-            var intersection = Intersect(combinedSegments.Combined);
+            var intersection = Intersect(combinedSegments.Segments);
 
             foreach (var s in intersection)
             {
@@ -61,16 +61,15 @@ namespace PolyBool.Net.Logic
 
         public static PolySegments Difference(CombinedPolySegments combined)
         {
-            return new PolySegments
-            {
-                Segments = Select(combined.Combined, new[]
+            return new PolySegments(Select(combined.Segments, new[]
                 {
                     0, 0, 0, 0,
                     2, 0, 2, 0,
                     1, 1, 0, 0,
                     0, 1, 2, 0
-                }),
-                IsInverted = !combined.IsInverted1 && combined.IsInverted2
+                }))
+            {
+                IsInverted = !combined.IsInverted && combined.IsInverted2
             };
         }
         public static IPolygon Difference(IPolygon first, IPolygon second)
@@ -98,10 +97,11 @@ namespace PolyBool.Net.Logic
             var secondPolygonRegions = PolyBool.Segments(second);
             var combinedSegments = PolyBool.Combine(firstPolygonRegions, secondPolygonRegions);
 
-            var difference = DifferenceRev(combinedSegments.Combined);
+            var difference = DifferenceRev(combinedSegments.Segments);
 
             return Polygon.New(PolyBool.SegmentChainer(difference), !first.Inverted && second.Inverted);
         }
+
         public static IList<ISegment> Xor(IList<ISegment> segments)
         {
             return Select(segments, new[] {   0, 2, 1, 0,
@@ -116,7 +116,7 @@ namespace PolyBool.Net.Logic
             var secondPolygonRegions = PolyBool.Segments(second);
             var combinedSegments = PolyBool.Combine(firstPolygonRegions, secondPolygonRegions);
 
-            var xor = Xor(combinedSegments.Combined);
+            var xor = Xor(combinedSegments.Segments);
 
             return Polygon.New(PolyBool.SegmentChainer(xor), first.Inverted != second.Inverted);
         }

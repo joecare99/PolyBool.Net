@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace PolyBool.Net.Logic
 {
-    internal static class Utils
+    public static class Utils
     {
         public static void Shift<T>(this IList<T> lst)
         {

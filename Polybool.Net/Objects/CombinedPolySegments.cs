@@ -2,11 +2,9 @@
 
 namespace PolyBool.Net.Objects;
 
-public class CombinedPolySegments(IList<ISegment> combined)
+public class CombinedPolySegments : PolySegments
 {
-    public bool IsInverted1 { get; set; }
+    public CombinedPolySegments(IList<ISegment> segments) : base(segments) { }
 
     public bool IsInverted2 { get; set; }
-
-    public IList<ISegment> Combined { get; set; }= combined;
 }
