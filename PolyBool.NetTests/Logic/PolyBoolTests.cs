@@ -12,16 +12,16 @@ namespace PolyBool.Net.Logic.Tests
     [TestClass()]
     public class PolyBoolTests
     {
-        
+
         [DataTestMethod()]
         [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
-                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
+                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 },DisplayName ="1")]
         [DataRow(new object[] { new double[] { 0, 0, 8, 8, 16, 0 } },
-                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
+                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 }, DisplayName = "2")]
         [DataRow(new object[] { new double[] { 0, 0, 8, 8, 16, 0, 0, 0 } },
-                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
+                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 }, DisplayName = "3")]
         [DataRow(new object[] { new double[] { 0, 0, 8, 8, 0, 0, 16, 0 } },
-                           new double[] { 0, 0, 8, 8, 0, 0, 0, 16, 0, 0 })]
+                           new double[] { 0, 0, 8, 8, 0, 0, 0, 16, 0, 0 }, DisplayName = "4")]
         public void SegmentsTest(object[] p1, double[] aEx)
         {
             var pl1 = p1.Val2Poly();
@@ -43,21 +43,21 @@ namespace PolyBool.Net.Logic.Tests
         [DataTestMethod()]
         [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
             new object[] { new double[] { 0, 6, 16, 6, 8, 14 } },
-                           new double[] { 0, 0, 6, 6, 4, 
-                                0, 6, 6, 6, 2, 
-                                6, 6, 8, 8, 7, 
-                                0, 6, 8, 14, 1, 
-                                6, 6, 10, 6, 14, 
-                                8, 8, 10, 6, 7, 
-                                0, 0, 16, 0, 8, 
+                           new double[] { 0, 0, 6, 6, 4,
+                                0, 6, 6, 6, 2,
+                                6, 6, 8, 8, 7,
+                                0, 6, 8, 14, 1,
+                                6, 6, 10, 6, 14,
+                                8, 8, 10, 6, 7,
+                                0, 0, 16, 0, 8,
                                 10, 6, 16, 0, 4,
-                                10, 6, 16, 6, 2, 
+                                10, 6, 16, 6, 2,
                                 8, 14, 16, 6, 1 })]
         public void CombineTest(object[] p1, object[] p2, double[] aEx)
         {
             var ps1 = PolyBool.Segments(p1.Val2Poly());
             var ps2 = PolyBool.Segments(p2.Val2Poly());
-            var psegments = PolyBool.Combine(ps1,ps2);
+            var psegments = PolyBool.Combine(ps1, ps2);
             Assert.IsInstanceOfType(psegments, typeof(CombinedPolySegments));
             Assert.AreEqual(aEx.Length, psegments.Segments.Count * 5);
             for (int i = 0; i < aEx.Length - 4; i += 5)
@@ -70,6 +70,56 @@ namespace PolyBool.Net.Logic.Tests
                 Assert.AreEqual((decimal)aEx[i + 3], s.End.Y, $"S[{i / 5}].E.Y");
                 Assert.AreEqual((int)aEx[i + 4], s.FIndex(), $"S[{i / 5}].IX");
             }
+        }
+
+        [DataTestMethod()]
+        [DataRow(new double[] { 0, 0, 0, 16, 4,
+            0, 16, 0, 16, 8 }, 0,DisplayName ="1 Zero Seg")]
+        [DataRow(new double[] { 
+            0, 0, 0, 16, 4,
+            0, 0, 0, 14, 8 }, 0,DisplayName = "2 Coll")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            2, 2, 2, 0, 4,
+            0, 2, 2, 2, 4,
+            0, 0, 2, 0, 8 }, 1,DisplayName ="4a Quadr")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            2, 2, 2, 0, 4,
+            2, 2, 0, 2, 4,
+            0, 0, 2, 0, 8 }, 1, DisplayName = "4b Quadr")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            2, 2, 2, 0, 4,
+            0, 0, 2, 0, 4,
+            2, 2, 0, 2, 8 }, 1, DisplayName = "4c Quadr")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            2, 2, 2, 0, 4,
+            2, 0, 0, 0, 4,
+            2, 2, 0, 2, 8 }, 1, DisplayName = "4d Quadr")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            0, 0, 2, 0, 4,
+            2, 0, 0, 2, 4,}, 1, DisplayName = "3a Tri 1")]
+        [DataRow(new double[] {
+            0, 0, 0, 2, 4,
+            0, 0, 2, 0, 4,
+            0, 2, 2, 0, 4,}, 1, DisplayName = "3b Tri 2")]
+        [DataRow(new double[] { 0, 0, 6, 6, 4,
+            0, 6, 6, 6, 2,
+            6, 6, 8, 8, 7,
+            0, 6, 8, 14, 1,
+            6, 6, 10, 6, 14,
+            8, 8, 10, 6, 7,
+            0, 0, 16, 0, 8,
+            10, 6, 16, 0, 4,
+            10, 6, 16, 6, 2,
+            8, 14, 16, 6, 1 },2)]
+        public void PolygonTest(double[] aPl,int i)
+        {
+            var pl= PolyBool.Polygon(aPl.Val2PolySeg());
+            Assert.AreEqual(i, pl.Regions.Count);
         }
     }
 }
