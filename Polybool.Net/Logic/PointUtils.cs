@@ -15,9 +15,9 @@ public static class PointUtils
     {
         // p must be collinear with left->right
         // returns false if p == left, p == right, or left == right
+        decimal dPxLx = point.X - left.X;
         decimal dPyLy = point.Y - left.Y;
         decimal dRxLx = right.X - left.X;
-        decimal dPxLx = point.X - left.X;
         decimal dRyLy = right.Y - left.Y;
 
         decimal dot = dPxLx * dRxLx + dPyLy * dRyLy;
