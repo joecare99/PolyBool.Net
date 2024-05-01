@@ -12,11 +12,16 @@ namespace PolyBool.Net.Logic.Tests
     [TestClass()]
     public class PolyBoolTests
     {
+        
         [DataTestMethod()]
         [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
                            new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
         [DataRow(new object[] { new double[] { 0, 0, 8, 8, 16, 0 } },
                            new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
+        [DataRow(new object[] { new double[] { 0, 0, 8, 8, 16, 0, 0, 0 } },
+                           new double[] { 0, 0, 8, 8, 4, 0, 0, 16, 0, 8, 8, 8, 16, 0, 4 })]
+        [DataRow(new object[] { new double[] { 0, 0, 8, 8, 0, 0, 16, 0 } },
+                           new double[] { 0, 0, 8, 8, 0, 0, 0, 16, 0, 0 })]
         public void SegmentsTest(object[] p1, double[] aEx)
         {
             var pl1 = p1.Val2Poly();
@@ -54,10 +59,10 @@ namespace PolyBool.Net.Logic.Tests
             var ps2 = PolyBool.Segments(p2.Val2Poly());
             var psegments = PolyBool.Combine(ps1,ps2);
             Assert.IsInstanceOfType(psegments, typeof(CombinedPolySegments));
-            Assert.AreEqual(aEx.Length, psegments.Combined.Count * 5);
+            Assert.AreEqual(aEx.Length, psegments.Segments.Count * 5);
             for (int i = 0; i < aEx.Length - 4; i += 5)
             {
-                var s = psegments.Combined[i / 5];
+                var s = psegments.Segments[i / 5];
                 Assert.IsInstanceOfType(s, typeof(ISegment));
                 Assert.AreEqual((decimal)aEx[i], s.Start.X, $"S[{i / 5}].S.X");
                 Assert.AreEqual((decimal)aEx[i + 1], s.Start.Y, $"S[{i / 5}].S.Y");
