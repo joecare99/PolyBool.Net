@@ -1,17 +1,18 @@
 ﻿using System;
+using PolyBool.Net.Interfaces;
 
 namespace PolyBool.Net.Objects
 {
-    public class LinkedList
+    public class LinkedList<T,T2> where T : class, ILinkedListNode<T>,IHasData<T2>, new()
     {
         public LinkedList()
         {
-            Root = new Node { IsRoot = true };
+            Root = new T { IsRoot = true };
         }
 
-        private Node Root { get; }
+        private T Root { get; }
 
-        public bool Exists(Node node)
+        public bool Exists(T node)
         {
             if (node == null || Equals(node, Root))
                 return false;
@@ -23,12 +24,12 @@ namespace PolyBool.Net.Objects
             return Root.Next == null;
         }
 
-        public Node GetHead()
+        public T? GetHead()
         {
             return Root.Next;
         }
 
-        public void InsertBefore(Node node, Func<Node, bool> check)
+        public void InsertBefore(T node, Func<T, bool> check)
         {
             var last = Root;
             var here = Root.Next;
@@ -38,7 +39,8 @@ namespace PolyBool.Net.Objects
                 {
                     node.Previous = here.Previous;
                     node.Next = here;
-                    here.Previous.Next = node;
+                    if (here.Previous != null)
+                        here.Previous.Next = node;
                     here.Previous = node;
                     return;
                 }
@@ -50,7 +52,7 @@ namespace PolyBool.Net.Objects
             node.Next = null;
         }
 
-        public Transition FindTransition(Func<Node, bool> check)
+        public Transition<T> FindTransition(Func<T, bool> check)
         {
             var previous = Root;
             var here = Root.Next;
@@ -61,35 +63,12 @@ namespace PolyBool.Net.Objects
                 previous = here;
                 here = here.Next;
             }
-            return new Transition
+            return new Transition<T>
             {
+                previous = previous,
                 Before = Equals(previous, Root) ? null : previous,
-                After = here,
-                Insert = node =>
-                {
-                    node.Previous = previous;
-                    node.Next = here;
-                    previous.Next = node;
-                    if (here != null)
-                        here.Previous = node;
-                    return node;
-                }
+                After = here                
             };
-        }
-
-        public static Node Node(Node data)
-        {
-            data.Previous = null;
-            data.Next = null;
-            data.Remove = () =>
-            {
-                data.Previous.Next = data.Next;
-                if (data.Next != null)
-                    data.Next.Previous = data.Previous;
-                data.Previous = null;
-                data.Next = null;
-            };
-            return data;
         }
     }
 }
