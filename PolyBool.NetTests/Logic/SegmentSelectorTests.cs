@@ -80,5 +80,87 @@ namespace PolyBool.Net.Logic.Tests
                 }
             }
         }
+
+        [DataTestMethod()]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 16, 6, 8, 14, 0, 6 } },
+            new object[] { new double[] { 10, 6 ,6, 6,  8, 8}, new double[] { 16, 6, 10, 6, 16, 0, 0, 0, 6, 6, 0, 6, 8, 14 } })]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 2, 1, 14, 1, 8, 7 } },
+            new object[] { new double[] { 14, 1, 2, 1, 8, 7 }, new double[] { 16, 0, 0, 0, 8, 8 } })]
+        public void XOrTest(object[] p1, object[] p2, object[] ex)
+        {
+            var pg1 = p1.Val2Poly();
+            var pg2 = p2.Val2Poly();
+            var unified = SegmentSelector.Xor(pg1, pg2);
+            Assert.IsInstanceOfType(unified, typeof(IPolygon));
+            Assert.AreEqual(ex.Length, unified.Regions.Count);
+            for (int i = 0; i < ex.Length; i++)
+            {
+                var region = unified.Regions[i];
+                Assert.IsInstanceOfType(region, typeof(IRegion));
+                Assert.AreEqual((ex[i] as IList<double>).Count, region.Points.Count * 2);
+                for (int j = 0; j < (ex[i] as IList<double>).Count - 1; j += 2)
+                {
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].Y");
+                }
+            }
+        }
+
+        [DataTestMethod()]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 16, 6, 8, 14, 0, 6 } },
+            new object[] { new double[] { 8, 14, 0, 6, 6, 6, 8, 8,10,6,16,6 } })]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 2, 1, 14, 1, 8, 7 } },
+            new object[] {  })]
+        public void DifferenceRevTest(object[] p1, object[] p2, object[] ex)
+        {
+            var pg1 = p1.Val2Poly();
+            var pg2 = p2.Val2Poly();
+            var unified = SegmentSelector.DifferenceRev(pg1, pg2);
+            Assert.IsInstanceOfType(unified, typeof(IPolygon));
+            Assert.AreEqual(ex.Length, unified.Regions.Count);
+            for (int i = 0; i < ex.Length; i++)
+            {
+                var region = unified.Regions[i];
+                Assert.IsInstanceOfType(region, typeof(IRegion));
+                Assert.AreEqual((ex[i] as IList<double>).Count, region.Points.Count * 2);
+                for (int j = 0; j < (ex[i] as IList<double>).Count - 1; j += 2)
+                {
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].Y");
+                }
+            }
+        }
+
+        [DataTestMethod()]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 16, 6, 8, 14, 0, 6 } },
+            new object[] { new double[] { 10, 6, 6, 6, 8, 8 } })]
+        [DataRow(new object[] { new double[] { 0, 0, 16, 0, 8, 8 } },
+             new object[] { new double[] { 2, 1, 14, 1, 8, 7 } },
+            new object[] { new double[] { 14, 1, 2, 1, 8, 7 } })]
+        public void IntersectTest(object[] p1, object[] p2, object[] ex)
+        {
+            var pg1 = p1.Val2Poly();
+            var pg2 = p2.Val2Poly();
+            var unified = SegmentSelector.Intersect(pg1, pg2);
+            Assert.IsInstanceOfType(unified, typeof(IPolygon));
+            Assert.AreEqual(ex.Length, unified.Regions.Count);
+            for (int i = 0; i < ex.Length; i++)
+            {
+                var region = unified.Regions[i];
+                Assert.IsInstanceOfType(region, typeof(IRegion));
+                Assert.AreEqual((ex[i] as IList<double>).Count, region.Points.Count * 2);
+                for (int j = 0; j < (ex[i] as IList<double>).Count - 1; j += 2)
+                {
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j], region.Points[j / 2].X, $"R[{i}].P[{j / 2}].X");
+                    Assert.AreEqual((decimal)(ex[i] as IList<double>)[j + 1], region.Points[j / 2].Y, $"R[{i}].P[{j / 2}].Y");
+                }
+            }
+        }
+
     }
 }
