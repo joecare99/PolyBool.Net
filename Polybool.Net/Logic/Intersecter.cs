@@ -15,7 +15,7 @@ namespace PolyBool.Net.Logic
             this.selfIntersection = selfIntersection;
         }
 
-        private readonly LinkedList<Node<NodeData>,NodeData> eventRoot = new();
+        private readonly LinkedList<Node<EventData>, EventData> eventRoot = new();
 
         protected ISegment SegmentNew(IPoint start, IPoint end)
         {
@@ -26,97 +26,97 @@ namespace PolyBool.Net.Logic
 
         protected void EventAddSegment(ISegment segment, bool primary)
         {
-            Node<NodeData> evStart = EventAddSegmentStart(segment, primary);
+            EventData evStart = EventAddSegmentStart(segment, primary);
             EventAddSegmentEnd(evStart, segment, primary);
         }
 
-        private void EventAddSegmentEnd(Node<NodeData> evStart, ISegment seg, bool primary)
+        private void EventAddSegmentEnd(EventData evStart, ISegment seg, bool primary)
         {
 
-            Node<NodeData> evEnd = new Node<NodeData>(new NodeData(seg,false)
+            EventData evEnd = new EventData(seg, false)
             {
                 Primary = primary,
-            },n=>n.Other= evStart);
+                Other = evStart
+            };
             evStart.Other = evEnd;
 
-            EventAdd(evEnd, evStart.Data.Pt);
+            EventAdd(evEnd,evEnd.Other.Pt);
         }
 
-        private Node<NodeData> EventAddSegmentStart(ISegment seg, bool primary)
+        private EventData EventAddSegmentStart(ISegment seg, bool primary)
         {
-            Node<NodeData> evStart = new Node<NodeData>(new NodeData(seg,true)
+            EventData evStart = new EventData(seg, true)
             {
                 Primary = primary,
-            });
-            EventAdd(evStart, seg.End);
+            };
+            EventAdd(evStart,evStart.Seg.End);
             return evStart;
         }
 
-        private void EventAdd(Node<NodeData> ev, IPoint otherPt)
+        private void EventAdd(EventData evd,IPoint pt)
         {
-            eventRoot.InsertBefore(ev, here =>
-            {
-                // should ev be inserted before here?
-                int comp = EventCompare(
-                    ev.Data.IsStart, ev.Data.Pt, otherPt,
-                    here.Data.IsStart, here.Data.Pt, here.Other.Data.Pt
-                );
-                return comp < 0;
+            eventRoot.Insert(evd,here => {
+                return eventCompare(ev, pt, here  ) < 0;
             });
         }
 
-        private int EventCompare(bool p1IsStart, IPoint p11, IPoint p12, bool p2IsStart, IPoint p21, IPoint p22)
+        private int eventCompare(EventData ev, IPoint pt, EventData here)
         {
+            IPoint p1_1 =  ev.Pt! ;
+            IPoint p1_2 =  pt ;
+            IPoint p2_1 =  here.Pt! ;
+            IPoint p2_2 =  here.Other!.Pt! ;
+            // returns:
+            //   -1 if p1 is smaller
+            //    0 if equal
+            //    1 if p2 is smaller
+
             // compare the selected points first
-            int comp = PointUtils.PointsCompare(p11, p21);
+            var comp = p1_1.CompareTo(p2_1,Epsilon.Eps);
             if (comp != 0)
-            {
                 return comp;
-            }
             // the selected points are the same
 
-            if (PointUtils.PointsSame(p12, p22)) // if the non-selected points are the same too...
-            {
+            // if the non-selected points are the same too...
+            if (p1_2.CompareTo(p2_2,Epsilon.Eps) == 0)
                 return 0; // then the segments are equal
-            }
 
-            if (p1IsStart != p2IsStart) // if one is a start and the other isn"t...
+            // if one is a start event and the other isn't...
+            if (ev.IsStart != here.IsStart)
             {
-                return p1IsStart ? 1 : -1; // favor the one that isn"t the start
+                // favor the one that isn't the start
+                return ev.IsStart ? 1 : -1;
             }
 
-            // otherwise, we"ll have to calculate which one is below the other manually
-            return PointUtils.PointAboveOrOnLine(p12,
-                p2IsStart ? p21 : p22, // order matters
-                p2IsStart ? p22 : p21
-            )
-                ? 1
-                : -1;
+            // otherwise, we'll have to calculate which one is below the
+            // other manually
+            return here!.Seg.PointAboveOrOnSeg(p1_2,Epsilon.Eps) ? 1 : -1;
         }
 
-        private int StatusCompare(NodeData ev1, NodeData ev2)
+        private int StatusCompare(EventData ev1, EventData ev2)
         {
-            IPoint a1 = ev1.Seg.Start;
-            IPoint a2 = ev1.Seg.End;
-            IPoint b1 = ev2.Seg.Start;
-            IPoint b2 = ev2.Seg.End;
-
-            if (PointUtils.PointsCollinear(a1, b1, b2))
+            if (ev1.Seg is ISegment a && ev2.Seg is ISegment b)
             {
-                if (PointUtils.PointsCollinear(a2, b1, b2))
-                {
-                    return 1;
-                }
-                return PointUtils.PointAboveOrOnLine(a2, b1, b2) ? 1 : -1;
+                IPoint a1 = a.Start;
+                IPoint a2 = a.End;
+                if ()
+                    if (b.PointCollinear(a1))
+                    {
+                        if (b.PointCollinear(a2))
+                        {
+                            return 1;
+                        }
+                        else return b.PointAboveOrOnLine(a2) ? 1 : -1;
+                    }
+                    else return PointUtils.PointAboveOrOnLine(a1, b1, b2) ? 1 : -1;
             }
-            return PointUtils.PointAboveOrOnLine(a1, b1, b2) ? 1 : -1;
         }
 
-        private Transition<Node<NodeData>> StatusFindSurrounding(LinkedList<Node<NodeData>,NodeData> statusRoot, Node<NodeData> ev)
+        private Transition<Node<EventData>> StatusFindSurrounding(LinkedList<Node<EventData>, EventData> statusRoot, Node<EventData> ev)
         {
             return statusRoot.FindTransition((here) =>
             {
-                int comp = StatusCompare(ev.Data, here.Ev.Data);
+                int comp = StatusCompare(evData, here.EvData);
                 return comp > 0;
             });
         }
@@ -130,32 +130,31 @@ namespace PolyBool.Net.Logic
             } : null);
         }
 
-        private void EventUpdateEnd(Node<NodeData> ev, IPoint end)
+        private void EventUpdateEnd(EventData evD, IPoint end)
         {
             // slides an end backwards
             //   (start)------------(end)    to:
             //   (start)---(end)
 
-
-            ev.Other.Remove();
-            ev.Data.Seg.End = end;
-            ev.Other.Data.Pt = end;
-            EventAdd(ev.Other, ev.Data.Pt);
+            eventRoot.Remove(evD.Other);
+            evD.Seg.End = end;
+            evD.Other.Pt = end;
+            EventAdd(evD.Other);
         }
 
-        private void EventDivide(Node<NodeData> ev, IPoint pt)
+        private void EventDivide(EventData evD, IPoint pt)
         {
-            ISegment ns = SegmentCopy(pt, ev.Data.Seg.End, ev.Data.Seg);
-            EventUpdateEnd(ev, pt);
-            EventAddSegment(ns, ev.Data.Primary);
+            ISegment ns = SegmentCopy(pt, evD.Seg.End, evD.Seg);
+            EventUpdateEnd(evD, pt);
+            EventAddSegment(ns, evD.Primary);
         }
 
-        private Node<NodeData>? CheckIntersection(Node<NodeData> ev1, Node<NodeData> ev2)
+        private EventData? CheckIntersection(EventData ev1, EventData ev2)
         {
             // returns the segment equal to ev1, or false if nothing equal
 
-            ISegment seg1 = ev1.Data.Seg;
-            ISegment seg2 = ev2.Data.Seg;
+            ISegment seg1 = ev1.Seg;
+            ISegment seg2 = ev2.Seg;
             IPoint a1 = seg1.Start;
             IPoint a2 = seg1.End;
             IPoint b1 = seg2.Start;
@@ -272,11 +271,11 @@ namespace PolyBool.Net.Logic
             return null;
         }
 
-        private Node<NodeData>? CheckBothIntersections(Node<NodeData>? above, Node<NodeData> ev, Node<NodeData>? below)
+        private EventData? CheckBothIntersections(EventData? above, EventData ev, EventData? below)
         {
             if (above != null)
             {
-                Node<NodeData>? eve = CheckIntersection(ev, above);
+                EventData? eve = CheckIntersection(ev, above);
                 if (eve != null)
                 {
                     return eve;
@@ -298,9 +297,7 @@ namespace PolyBool.Net.Logic
             // status logic
             //
 
-            LinkedList<Node<NodeData>,NodeData> statusRoot = new ();
-
-
+            LinkedList<Node<EventData>, EventData> statusRoot = new();
 
             //
             // main event loop
@@ -308,19 +305,18 @@ namespace PolyBool.Net.Logic
             List<ISegment> segments = new List<ISegment>();
             while (!eventRoot.IsEmpty())
             {
-                Node<NodeData> ev = eventRoot.GetHead();
+                EventData ev = eventRoot.First();
 
 
-                if (ev.Data.IsStart)
+                if (ev.IsStart)
                 {
 
+                    Transition<Node<EventData>> surrounding = StatusFindSurrounding(statusRoot, ev);
+                    EventData? above = surrounding.Before.Data != null ? surrounding.Before.Data : null;
+                    EventData? below = surrounding.After.Data != null ? surrounding.After.Data : null;
 
-                    Transition<Node<NodeData>> surrounding = StatusFindSurrounding(statusRoot, ev);
-                    Node<NodeData>? above = surrounding.Before != null ? surrounding.Before.Ev : null;
-                    Node<NodeData>? below = surrounding.After != null ? surrounding.After.Ev : null;
 
-
-                    Node<NodeData>? eve = CheckBothIntersections(above, ev, below);
+                    EventData? eve = CheckBothIntersections(above, ev, below);
                     if (eve != null)
                     {
                         // ev and eve are equal
@@ -331,21 +327,21 @@ namespace PolyBool.Net.Logic
                         if (selfIntersection)
                         {
                             bool toggle; // are we a toggling edge?
-                            if (ev.Data.Seg.MyFill?.Below == null)
+                            if (ev.Seg.MyFill?.Below == null)
                             {
                                 toggle = true;
                             }
                             else
                             {
-                                toggle = ev.Data.Seg.MyFill.Above != ev.Data.Seg.MyFill.Below;
+                                toggle = ev.Seg.MyFill.Above != ev.Seg.MyFill.Below;
                             }
 
                             // merge two segments that belong to the same polygon
                             // think of this as sandwiching two segments together, where `eve.seg` is
                             // the bottom -- this will cause the above fill flag to toggle
-                            if (toggle && eve.Data.Seg.MyFill!=null)
+                            if (toggle && eve.Seg.MyFill != null)
                             {
-                                eve.Data.Seg.MyFill.Above = !eve.Data.Seg.MyFill.Above;
+                                eve.Seg.MyFill.Above = !eve.Seg.MyFill.Above;
                             }
                         }
                         else
@@ -354,14 +350,14 @@ namespace PolyBool.Net.Logic
                             // each segment has distinct knowledge, so no special logic is needed
                             // note that this can only happen once per segment in this phase, because we
                             // are guaranteed that all self-intersections are gone
-                            eve.Data.Seg.OtherFill = ev.Data.Seg.MyFill;
+                            eve.Seg.OtherFill = ev.Seg.MyFill;
                         }
 
-                        ev.Other.Remove();
-                        ev.Remove();
+                        eventRoot.Remove(ev.Other);
+                        eventRoot.Remove(ev);
                     }
 
-                    if (!Equals(eventRoot.GetHead(), ev))
+                    if (!Equals(eventRoot.First(), ev))
                     {
                         // something was inserted before us in the event queue, so loop back around and
                         // process it before continuing
@@ -374,38 +370,38 @@ namespace PolyBool.Net.Logic
                     if (selfIntersection)
                     {
                         bool toggle; // are we a toggling edge?
-                        if (ev.Data.Seg.MyFill?.Below == null) // if we are a new segment...
+                        if (ev.Seg.MyFill?.Below == null) // if we are a new segment...
                         {
                             toggle = true; // then we toggle
                         }
                         else // we are a segment that has previous knowledge from a division
                         {
-                            toggle = ev.Data.Seg.MyFill.Above != ev.Data.Seg.MyFill.Below; // calculate toggle
+                            toggle = ev.Seg.MyFill.Above != ev.Seg.MyFill.Below; // calculate toggle
                         }
 
                         // next, calculate whether we are filled below us
-                        if (below == null && ev.Data.Seg.MyFill!= null)
+                        if (below == null && ev.Seg.MyFill != null)
                         {
                             // if nothing is below us...
                             // we are filled below us if the polygon is inverted
-                            ev.Data.Seg.MyFill.Below = primaryPolyInverted;
+                            ev.Seg.MyFill.Below = primaryPolyInverted;
                         }
-                        else if (below != null && ev.Data.Seg.MyFill != null)
+                        else if (below != null && ev.Seg.MyFill != null)
                         {
                             // otherwise, we know the answer -- it"s the same if whatever is below
                             // us is filled above it
-                            ev.Data.Seg.MyFill.Below = below.Data.Seg.MyFill?.Above;
+                            ev.Seg.MyFill.Below = below.Seg.MyFill?.Above;
                         }
 
                         // since now we know if we"re filled below us, we can calculate whether
                         // we"re filled above us by applying toggle to whatever is below us
-                        if (toggle && ev.Data.Seg.MyFill != null)
+                        if (toggle && ev.Seg.MyFill != null)
                         {
-                            ev.Data.Seg.MyFill.Above = !ev.Data.Seg.MyFill.Below;
+                            ev.Seg.MyFill.Above = !ev.Seg.MyFill.Below;
                         }
-                        else if (!toggle && ev.Data.Seg.MyFill != null)
+                        else if (!toggle && ev.Seg.MyFill != null)
                         {
-                            ev.Data.Seg.MyFill.Above = ev.Data.Seg.MyFill.Below;
+                            ev.Seg.MyFill.Above = ev.Seg.MyFill.Below;
                         }
                     }
                     else
@@ -413,7 +409,7 @@ namespace PolyBool.Net.Logic
                         // now we fill in any missing transition information, since we are all-knowing
                         // at this point
 
-                        if (ev.Data.Seg.OtherFill == null)
+                        if (ev.Seg.OtherFill == null)
                         {
                             // if we don"t have other information, then we need to figure out if we"re
                             // inside the other polygon
@@ -423,22 +419,22 @@ namespace PolyBool.Net.Logic
                                 // if nothing is below us, then we"re inside if the other polygon is
                                 // inverted
                                 inside =
-                                    ev.Data.Primary ? secondaryPolyInverted : primaryPolyInverted;
+                                    ev.Primary ? secondaryPolyInverted : primaryPolyInverted;
                             }
                             else
                             {
                                 // otherwise, something is below us
                                 // so copy the below segment"s other polygon"s above
-                                if (ev.Data.Primary == below.Data.Primary)
+                                if (ev.Primary == below.Primary)
                                 {
-                                    inside = below.Data.Seg.OtherFill?.Above;
+                                    inside = below.Seg.OtherFill?.Above;
                                 }
                                 else
                                 {
-                                    inside = below.Data.Seg.MyFill?.Above;
+                                    inside = below.Seg.MyFill?.Above;
                                 }
                             }
-                            ev.Data.Seg.OtherFill = new Fill()
+                            ev.Seg.OtherFill = new Fill()
                             {
                                 Above = inside,
                                 Below = inside
@@ -448,11 +444,11 @@ namespace PolyBool.Net.Logic
 
 
                     // insert the status and remember it for later removal
-                    ev.Other.Status = surrounding.Insert(new Node<NodeData>(new NodeData(null,false),n=>  n.Ev = ev ));
+                    ev.Other.Status = surrounding.Insert(new Node<EventData>(new EventData(null, false), n => n.Ev = ev));
                 }
                 else
                 {
-                    Node<NodeData> st = ev.Status;
+                    EventData st = ev.Status;
 
                     if (st == null)
                     {
@@ -464,7 +460,7 @@ namespace PolyBool.Net.Logic
                     // for those
                     if (statusRoot.Exists(st.Previous) && statusRoot.Exists(st.Next))
                     {
-                        CheckIntersection(st.Previous.Ev, st.Next.Ev);
+                        CheckIntersection(st.Previous.Data, st.Next.Data);
                     }
 
 
@@ -473,14 +469,14 @@ namespace PolyBool.Net.Logic
 
                     // if we"ve reached this point, we"ve calculated everything there is to know, so
                     // save the segment for reporting
-                    if (!ev.Data.Primary)
+                    if (!ev.Primary)
                     {
                         // make sure `seg.myFill` actually points to the primary polygon though
-                        Fill? s = ev.Data.Seg.MyFill;
-                        ev.Data.Seg.MyFill = ev.Data.Seg.OtherFill;
-                        ev.Data.Seg.OtherFill = s;
+                        Fill? s = ev.Seg.MyFill;
+                        ev.Seg.MyFill = ev.Seg.OtherFill;
+                        ev.Seg.OtherFill = s;
                     }
-                    segments.Add(ev.Data.Seg);
+                    segments.Add(ev.Seg);
                 }
 
                 // remove the event and continue

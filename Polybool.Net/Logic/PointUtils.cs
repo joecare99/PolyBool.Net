@@ -71,7 +71,7 @@ public static class PointUtils
         return point1.Same(point2, Epsilon.Eps) ;
     }
 
-    public static int Compare(this IPoint point1, IPoint point2, decimal eps)
+    public static int CompareTo(this IPoint point1, IPoint point2, decimal eps)
     {
         if (SameX(point1, point2, eps))
         {
@@ -82,7 +82,7 @@ public static class PointUtils
 
     public static int PointsCompare(this IPoint point1, IPoint point2)
     {
-        return point1.Compare(point2,Epsilon.Eps);
+        return point1.CompareTo(point2,Epsilon.Eps);
     }
 
     public static bool PointsCollinear(IPoint pt1, IPoint pt2, IPoint pt3)

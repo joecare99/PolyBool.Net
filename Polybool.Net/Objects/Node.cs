@@ -8,8 +8,6 @@ namespace PolyBool.Net.Objects
 
         public Node<T> Status { get; set; }
 
-        public Node<T>? Other { get; set; }
-
         public Node<T> Ev { get; set; }
 
         public Node<T>? Previous { get; set; }

@@ -1,13 +1,12 @@
 ﻿using PolyBool.Net.Interfaces;
+using System.Data.SqlClient;
 
 namespace PolyBool.Net.Objects
 {
-    public interface ISegment
+    public interface ISegment : ISegment<decimal>
     {
-        IPoint Start { get; set; }
-        IPoint End { get; set; }
-        Fill? MyFill { get; set; }
-        Fill? OtherFill { get; set; }
+        new IPoint Start { get; set; }
+        new IPoint End { get; set; }
     }
 
     public interface ISegment<T> where T : struct
@@ -16,5 +15,11 @@ namespace PolyBool.Net.Objects
         IPoint<T> End { get; set; }
         Fill? MyFill { get; set; }
         Fill? OtherFill { get; set; }
+
+        bool PointCollinear(IPoint<T> pt, T eps);
+
+        bool PointBetween(IPoint<T> pt, T eps);
+
+        bool PointOnOrAbove(IPoint<T> pt, T eps);
     }
 }
