@@ -40,7 +40,7 @@ namespace PolyBool.Net.Logic
             };
             evStart.Other = evEnd;
 
-            EventAdd(evEnd,evEnd.Other.Pt);
+            EventAdd(evEnd, evEnd.Other.Pt);
         }
 
         private EventData EventAddSegmentStart(ISegment seg, bool primary)
@@ -49,36 +49,37 @@ namespace PolyBool.Net.Logic
             {
                 Primary = primary,
             };
-            EventAdd(evStart,evStart.Seg.End);
+            EventAdd(evStart, evStart.Seg.End);
             return evStart;
         }
 
-        private void EventAdd(EventData evd,IPoint pt)
+        private void EventAdd(EventData evd, IPoint pt)
         {
-            eventRoot.Insert(evd,here => {
-                return eventCompare(ev, pt, here  ) < 0;
+            eventRoot.Insert(evd, here =>
+            {
+                return eventCompare(evd, pt, here) < 0;
             });
         }
 
         private int eventCompare(EventData ev, IPoint pt, EventData here)
         {
-            IPoint p1_1 =  ev.Pt! ;
-            IPoint p1_2 =  pt ;
-            IPoint p2_1 =  here.Pt! ;
-            IPoint p2_2 =  here.Other!.Pt! ;
+            IPoint p1_1 = ev.Pt!;
+            IPoint p1_2 = pt;
+            IPoint p2_1 = here.Pt!;
+            IPoint p2_2 = here.Other!.Pt!;
             // returns:
             //   -1 if p1 is smaller
             //    0 if equal
             //    1 if p2 is smaller
 
             // compare the selected points first
-            var comp = p1_1.CompareTo(p2_1,Epsilon.Eps);
+            var comp = p1_1.CompareTo(p2_1, Epsilon.Eps);
             if (comp != 0)
                 return comp;
             // the selected points are the same
 
             // if the non-selected points are the same too...
-            if (p1_2.CompareTo(p2_2,Epsilon.Eps) == 0)
+            if (p1_2.CompareTo(p2_2, Epsilon.Eps) == 0)
                 return 0; // then the segments are equal
 
             // if one is a start event and the other isn't...
@@ -90,7 +91,7 @@ namespace PolyBool.Net.Logic
 
             // otherwise, we'll have to calculate which one is below the
             // other manually
-            return here!.Seg.PointAboveOrOnSeg(p1_2,Epsilon.Eps) ? 1 : -1;
+            return here!.Seg.PointOnOrAbove(p1_2, Epsilon.Eps) ? 1 : -1;
         }
 
         private int StatusCompare(EventData ev1, EventData ev2)
@@ -99,24 +100,25 @@ namespace PolyBool.Net.Logic
             {
                 IPoint a1 = a.Start;
                 IPoint a2 = a.End;
-                if ()
-                    if (b.PointCollinear(a1))
+
+                if (b.PointCollinear(a1, Epsilon.Eps))
+                {
+                    if (b.PointCollinear(a2, Epsilon.Eps))
                     {
-                        if (b.PointCollinear(a2))
-                        {
-                            return 1;
-                        }
-                        else return b.PointAboveOrOnLine(a2) ? 1 : -1;
+                        return 1;
                     }
-                    else return PointUtils.PointAboveOrOnLine(a1, b1, b2) ? 1 : -1;
+                    else return b.PointOnOrAbove(a2,Epsilon.Eps) ? 1 : -1;
+                }
+                else return b.PointOnOrAbove(a1, Epsilon.Eps) ? 1 : -1;
             }
+            return 0;
         }
 
         private Transition<Node<EventData>> StatusFindSurrounding(LinkedList<Node<EventData>, EventData> statusRoot, Node<EventData> ev)
         {
             return statusRoot.FindTransition((here) =>
             {
-                int comp = StatusCompare(evData, here.EvData);
+                int comp = StatusCompare(ev.Data, here.Data);
                 return comp > 0;
             });
         }
